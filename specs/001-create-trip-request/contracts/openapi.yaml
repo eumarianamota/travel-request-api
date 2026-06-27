@@ -1,0 +1,200 @@
+openapi: 3.1.0
+info:
+  title: Travel Request API - Create Flow
+  version: 1.0.0
+  description: Contract for creating institutional travel requests.
+servers:
+  - url: http://localhost:3030
+paths:
+  /trip-requests:
+    post:
+      summary: Create a travel request
+      operationId: createTripRequest
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTripRequestInput'
+      responses:
+        '201':
+          description: Travel request created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TripRequestSuccessResponse'
+        '400':
+          description: Invalid request data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorResponse'
+        '409':
+          description: Travel request blocked by holiday rule
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HolidayTripNotAllowedErrorResponse'
+        '502':
+          description: Required holiday provider unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HolidaysApiUnavailableErrorResponse'
+        '500':
+          description: Unexpected internal failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerErrorResponse'
+components:
+  schemas:
+    CreateTripRequestInput:
+      type: object
+      additionalProperties: false
+      required:
+        - requesterName
+        - origin
+        - destination
+        - departureAt
+        - returnAt
+        - purpose
+        - passengerCount
+      properties:
+        requesterName:
+          type: string
+        origin:
+          type: string
+        destination:
+          type: string
+        departureAt:
+          type: string
+          format: date-time
+        returnAt:
+          type: string
+          format: date-time
+        purpose:
+          type: string
+        passengerCount:
+          type: integer
+          minimum: 1
+    TripRequest:
+      type: object
+      required:
+        - id
+        - requesterName
+        - origin
+        - destination
+        - departureAt
+        - returnAt
+        - purpose
+        - passengerCount
+        - status
+        - createdAt
+      properties:
+        id:
+          type: integer
+        requesterName:
+          type: string
+        origin:
+          type: string
+        destination:
+          type: string
+        departureAt:
+          type: string
+          format: date-time
+        returnAt:
+          type: string
+          format: date-time
+        purpose:
+          type: string
+        passengerCount:
+          type: integer
+        status:
+          type: string
+          enum:
+            - requested
+            - canceled
+        createdAt:
+          type: string
+          format: date-time
+    TripRequestSuccessResponse:
+      type: object
+      required:
+        - success
+        - data
+      properties:
+        success:
+          type: boolean
+          const: true
+        data:
+          $ref: '#/components/schemas/TripRequest'
+    ErrorDetail:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+    ErrorResponse:
+      type: object
+      required:
+        - success
+        - error
+      properties:
+        success:
+          type: boolean
+          const: false
+        error:
+          $ref: '#/components/schemas/ErrorDetail'
+    ValidationErrorResponse:
+      allOf:
+        - $ref: '#/components/schemas/ErrorResponse'
+        - type: object
+          properties:
+            error:
+              allOf:
+                - $ref: '#/components/schemas/ErrorDetail'
+                - type: object
+                  properties:
+                    code:
+                      const: VALIDATION_ERROR
+    HolidayTripNotAllowedErrorResponse:
+      allOf:
+        - $ref: '#/components/schemas/ErrorResponse'
+        - type: object
+          properties:
+            error:
+              allOf:
+                - $ref: '#/components/schemas/ErrorDetail'
+                - type: object
+                  properties:
+                    code:
+                      const: HOLIDAY_TRIP_NOT_ALLOWED
+    HolidaysApiUnavailableErrorResponse:
+      allOf:
+        - $ref: '#/components/schemas/ErrorResponse'
+        - type: object
+          properties:
+            error:
+              allOf:
+                - $ref: '#/components/schemas/ErrorDetail'
+                - type: object
+                  properties:
+                    code:
+                      const: HOLIDAYS_API_UNAVAILABLE
+    InternalServerErrorResponse:
+      allOf:
+        - $ref: '#/components/schemas/ErrorResponse'
+        - type: object
+          properties:
+            error:
+              allOf:
+                - $ref: '#/components/schemas/ErrorDetail'
+                - type: object
+                  properties:
+                    code:
+                      const: INTERNAL_SERVER_ERROR
