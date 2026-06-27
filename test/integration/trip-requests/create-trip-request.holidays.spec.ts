@@ -8,6 +8,9 @@ import type { TripRequestRepository } from '#src/trip-requests/application/trip-
 import { withTestServer } from './test-http.js'
 
 const tripRequestRepository: TripRequestRepository = {
+  async list() {
+    return []
+  },
   async create() {
     throw new Error('should not persist blocked requests')
   },

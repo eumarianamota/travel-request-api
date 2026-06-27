@@ -10,6 +10,9 @@ import { withTestServer } from './test-http.js'
 describe('POST /trip-requests internal error flow', () => {
   it('returns 500 for unexpected failures', async () => {
     const tripRequestRepository: TripRequestRepository = {
+      async list() {
+        return []
+      },
       async create() {
         throw new Error('database offline')
       },

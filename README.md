@@ -47,6 +47,7 @@ yarn install
 O repositório agora inclui a primeira vertical slice da API de viagens:
 
 - `POST /trip-requests`
+- `GET /trip-requests`
 - persistência em PostgreSQL com SQL direto
 - validação local-first de feriados via BrasilAPI
 

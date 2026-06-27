@@ -1,0 +1,134 @@
+openapi: 3.1.0
+info:
+  title: Travel Request API - List Flow
+  version: 1.0.0
+  description: Contract for listing institutional travel requests.
+servers:
+  - url: http://localhost:3030
+paths:
+  /trip-requests:
+    get:
+      summary: List travel requests
+      operationId: listTripRequests
+      tags:
+        - Trip Requests
+      responses:
+        '200':
+          description: Travel requests listed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TripRequestListSuccessResponse'
+              examples:
+                with-results:
+                  value:
+                    success: true
+                    data:
+                      - id: 1
+                        requesterName: Maria Silva
+                        origin: Parnaiba
+                        destination: Teresina
+                        departureAt: 2026-06-24T10:00:00.000Z
+                        returnAt: 2026-06-24T18:00:00.000Z
+                        purpose: Participation in an institutional meeting
+                        passengerCount: 3
+                        status: requested
+                        createdAt: 2026-06-20T14:30:00.000Z
+                empty-list:
+                  value:
+                    success: true
+                    data: []
+        '500':
+          description: Unexpected internal failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerErrorResponse'
+              examples:
+                unexpected:
+                  value:
+                    success: false
+                    error:
+                      code: INTERNAL_SERVER_ERROR
+                      message: An unexpected internal error occurred.
+components:
+  schemas:
+    TripRequest:
+      type: object
+      required:
+        - id
+        - requesterName
+        - origin
+        - destination
+        - departureAt
+        - returnAt
+        - purpose
+        - passengerCount
+        - status
+        - createdAt
+      properties:
+        id:
+          type: integer
+        requesterName:
+          type: string
+        origin:
+          type: string
+        destination:
+          type: string
+        departureAt:
+          type: string
+          format: date-time
+        returnAt:
+          type: string
+          format: date-time
+        purpose:
+          type: string
+        passengerCount:
+          type: integer
+        status:
+          type: string
+          enum:
+            - requested
+            - canceled
+        createdAt:
+          type: string
+          format: date-time
+    TripRequestListSuccessResponse:
+      type: object
+      required:
+        - success
+        - data
+      properties:
+        success:
+          type: boolean
+          const: true
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/TripRequest'
+    ErrorDetail:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+    InternalServerErrorResponse:
+      type: object
+      required:
+        - success
+        - error
+      properties:
+        success:
+          type: boolean
+          const: false
+        error:
+          allOf:
+            - $ref: '#/components/schemas/ErrorDetail'
+            - type: object
+              properties:
+                code:
+                  const: INTERNAL_SERVER_ERROR

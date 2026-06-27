@@ -115,5 +115,6 @@ describe('bootstrap', () => {
 
     expect(context.port).toBe(3030)
     expect(typeof context.app.post).toBe('function')
+    expect(typeof context.app.get).toBe('function')
   })
 })

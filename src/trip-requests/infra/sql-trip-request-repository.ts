@@ -1,6 +1,7 @@
 import type { Pool } from 'pg'
 
 import type { TripRequestRepository } from '#src/trip-requests/application/trip-request-repository'
+import { createTripRequestSummary } from '#src/trip-requests/domain/trip-request'
 import type { TripRequest, TripRequestDraft } from '#src/trip-requests/domain/trip-request'
 
 interface TripRequestRow {
@@ -16,21 +17,42 @@ interface TripRequestRow {
   created_at: string
 }
 
-const mapTripRequestRow = (row: TripRequestRow): TripRequest => ({
-  id: row.id,
-  requesterName: row.requester_name,
-  origin: row.origin,
-  destination: row.destination,
-  departureAt: new Date(row.departure_at).toISOString(),
-  returnAt: new Date(row.return_at).toISOString(),
-  purpose: row.purpose,
-  passengerCount: row.passenger_count,
-  status: row.status,
-  createdAt: new Date(row.created_at).toISOString(),
-})
+const mapTripRequestRow = (row: TripRequestRow): TripRequest =>
+  createTripRequestSummary({
+    id: row.id,
+    requesterName: row.requester_name,
+    origin: row.origin,
+    destination: row.destination,
+    departureAt: row.departure_at,
+    returnAt: row.return_at,
+    purpose: row.purpose,
+    passengerCount: row.passenger_count,
+    status: row.status,
+    createdAt: row.created_at,
+  })
 
 export class SqlTripRequestRepository implements TripRequestRepository {
   public constructor(private readonly pool: Pool) {}
+
+  public async list(): Promise<TripRequest[]> {
+    const result = await this.pool.query<TripRequestRow>(
+      `SELECT
+        id,
+        requester_name,
+        origin,
+        destination,
+        departure_at::text AS departure_at,
+        return_at::text AS return_at,
+        purpose,
+        passenger_count,
+        status,
+        created_at::text AS created_at
+       FROM trip_requests
+       ORDER BY departure_at DESC`,
+    )
+
+    return result.rows.map((row) => mapTripRequestRow(row))
+  }
 
   public async create(input: TripRequestDraft): Promise<TripRequest> {
     const result = await this.pool.query<TripRequestRow>(

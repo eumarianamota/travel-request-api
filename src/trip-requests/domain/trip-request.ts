@@ -32,6 +32,12 @@ export interface TripRequest extends TripRequestData {
   createdAt: string
 }
 
+export interface TripRequestSummaryInput extends TripRequestData {
+  id: number
+  status: string
+  createdAt: string
+}
+
 type RequiredTextFieldName = 'requesterName' | 'origin' | 'destination' | 'purpose'
 
 const assertRequiredText = (fieldName: RequiredTextFieldName, value: string | undefined): string => {
@@ -63,6 +69,27 @@ export const normalizeTimestamp = (value: string, fieldName: 'departureAt' | 're
 }
 
 export const toCivilDate = (normalizedTimestamp: string): string => normalizedTimestamp.slice(0, 10)
+
+const normalizeReadStatus = (status: string): TripRequestStatus => {
+  if (status === 'requested' || status === 'canceled') {
+    return status
+  }
+
+  throw validationError('status must be requested or canceled.')
+}
+
+export const createTripRequestSummary = (input: TripRequestSummaryInput): TripRequest => ({
+  id: input.id,
+  requesterName: input.requesterName,
+  origin: input.origin,
+  destination: input.destination,
+  departureAt: normalizeTimestamp(input.departureAt, 'departureAt'),
+  returnAt: normalizeTimestamp(input.returnAt, 'returnAt'),
+  purpose: input.purpose,
+  passengerCount: input.passengerCount,
+  status: normalizeReadStatus(input.status),
+  createdAt: new Date(input.createdAt).toISOString(),
+})
 
 export const createTripRequestDraft = (input: Partial<CreateTripRequestInput>): TripRequestDraft => {
   const requesterName = assertRequiredText('requesterName', input.requesterName)

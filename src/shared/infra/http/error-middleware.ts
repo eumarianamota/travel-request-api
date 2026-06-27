@@ -24,9 +24,9 @@ export const createErrorMiddleware =
   (error: unknown, _request: Request, response: Response<ErrorResponseBody>, _next: NextFunction): void => {
     if (isApplicationError(error)) {
       if (error.statusCode >= 500) {
-        logger.error('Create trip request failed with application error', { code: error.code, message: error.message })
+        logger.error('Request failed with application error', { code: error.code, message: error.message })
       } else {
-        logger.warn('Create trip request rejected', { code: error.code, message: error.message })
+        logger.warn('Request rejected', { code: error.code, message: error.message })
       }
 
       response.status(error.statusCode).json(toResponseBody(error.code, error.message))

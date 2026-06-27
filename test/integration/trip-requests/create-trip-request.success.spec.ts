@@ -13,6 +13,10 @@ class InMemoryTripRequestRepository implements TripRequestRepository {
 
   public readonly created: TripRequest[] = []
 
+  public async list(): Promise<TripRequest[]> {
+    return this.created
+  }
+
   public async create(input: TripRequestDraft): Promise<TripRequest> {
     const tripRequest: TripRequest = {
       id: this.nextId++,
