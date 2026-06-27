@@ -30,6 +30,10 @@ yarn install
 
 3. Prepare the required database tables for `trip_requests` and `holidays`.
 
+```bash
+yarn db:schema
+```
+
 4. Start the application:
 
 ```bash
@@ -98,11 +102,13 @@ Expected outcome:
 Run validation in repository-preferred order:
 
 ```bash
-yarn test -- test/main.spec.ts
+yarn test -- test/unit/trip-requests/create-trip-request.domain.spec.ts
+yarn test -- test/integration/trip-requests/create-trip-request.success.spec.ts
 yarn type:check
 yarn lint
 yarn test
 ```
 
-Replace the targeted test command with the specific unit and integration files
-added for this feature during implementation.
+The feature also adds dedicated regression coverage for validation, holiday
+blocking, provider failure, internal error mapping, OpenAPI assertions, and
+bootstrap wiring.

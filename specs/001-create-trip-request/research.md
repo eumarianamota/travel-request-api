@@ -13,8 +13,7 @@
   - Start with only HTTP request validation: rejected because the feature must
     also persist data and enforce holiday business rules.
 
-## Decision 2: Use local-first holiday validation behind explicit application
-abstractions
+## Decision 2: Use local-first holiday validation behind explicit application abstractions
 
 - **Decision**: The create use case will query locally stored holidays first
   and only call the holiday provider when the required year is unavailable

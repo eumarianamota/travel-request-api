@@ -152,9 +152,9 @@ request is also rejected when required holiday data cannot be obtained.
   date falls on a national holiday.
 - **FR-019**: The system MUST use `HOLIDAYS_API_UNAVAILABLE` when required
   upstream holiday validation fails.
-- **FR-020**: The system MUST return an outcome that distinguishes invalid
-  input, forbidden holiday departure, unavailable required holiday data, and
-  unexpected internal failure during creation.
+- **FR-020**: The system MUST distinguish validation failure,
+  holiday-blocked creation, unavailable required holiday data, and unexpected
+  internal failure as separate error outcomes during creation.
 - **FR-021**: The system MUST return `201 Created` for successful travel
   request creation.
 - **FR-022**: The system MUST return `400 Bad Request` for invalid creation

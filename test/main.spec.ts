@@ -13,6 +13,8 @@ const clearAppEnv = (): void => {
   delete process.env['NODE_ENV']
   delete process.env['APP_NAME']
   delete process.env['APP_PORT']
+  delete process.env['DATABASE_URL']
+  delete process.env['HOLIDAYS_API_BASE_URL']
 }
 
 const loadEnvModule = async (): Promise<typeof EnvModule> => {
@@ -47,6 +49,8 @@ describe('environment configuration', () => {
       nodeEnv: 'development',
       appName: 'ts-project',
       appPort: 3030,
+      databaseUrl: 'postgresql://postgres:postgres@localhost:5432/travel_request_api',
+      holidaysApiBaseUrl: 'https://brasilapi.com.br',
     })
   })
 
@@ -54,6 +58,8 @@ describe('environment configuration', () => {
     process.env['NODE_ENV'] = 'production'
     process.env['APP_NAME'] = 'professional-template'
     process.env['APP_PORT'] = '8080'
+    process.env['DATABASE_URL'] = 'postgresql://localhost:5432/app'
+    process.env['HOLIDAYS_API_BASE_URL'] = 'https://example.com'
 
     const { env } = await loadEnvModule()
 
@@ -61,6 +67,8 @@ describe('environment configuration', () => {
       nodeEnv: 'production',
       appName: 'professional-template',
       appPort: 8080,
+      databaseUrl: 'postgresql://localhost:5432/app',
+      holidaysApiBaseUrl: 'https://example.com',
     })
   })
 
@@ -76,6 +84,13 @@ describe('environment configuration', () => {
 
     await expect(loadEnvModule()).rejects.toThrow('Invalid APP_PORT')
   })
+
+  it('throws for an invalid DATABASE_URL', async () => {
+    process.env['NODE_ENV'] = 'test'
+    process.env['DATABASE_URL'] = ''
+
+    await expect(loadEnvModule()).rejects.toThrow('Invalid DATABASE_URL')
+  })
 })
 
 describe('bootstrap', () => {
@@ -84,6 +99,8 @@ describe('bootstrap', () => {
     process.env['NODE_ENV'] = 'test'
     process.env['APP_NAME'] = 'ts-project'
     process.env['APP_PORT'] = '3030'
+    process.env['DATABASE_URL'] = 'postgresql://localhost:5432/app'
+    process.env['HOLIDAYS_API_BASE_URL'] = 'https://example.com'
   })
 
   afterEach(() => {
@@ -91,14 +108,12 @@ describe('bootstrap', () => {
     vi.restoreAllMocks()
   })
 
-  it('logs the startup banner', async () => {
-    const logSpy = vi.spyOn(console, 'log').mockImplementation(() => undefined)
-    const { bootstrap } = await loadMainModule()
+  it('builds the application context from environment configuration', async () => {
+    const { buildBootstrapContext } = await loadMainModule()
 
-    bootstrap()
+    const context = buildBootstrapContext()
 
-    expect(logSpy).toHaveBeenNthCalledWith(1, '[ts-project] starting application')
-    expect(logSpy).toHaveBeenNthCalledWith(2, 'Environment: test')
-    expect(logSpy).toHaveBeenNthCalledWith(3, 'Port: 3030')
+    expect(context.port).toBe(3030)
+    expect(typeof context.app.post).toBe('function')
   })
 })

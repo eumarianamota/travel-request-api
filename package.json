@@ -12,6 +12,7 @@
   "scripts": {
     "dev": "node --experimental-transform-types --conditions=development ./src/main.ts",
     "start": "node ./build/main.js",
+    "db:schema": "node --experimental-transform-types --conditions=development ./src/shared/infra/db/run-schema.ts",
     "clean": "rimraf ./build ./.cache",
     "build": "yarn clean && tsc -p ./tsconfig.build.json",
     "type:check": "tsc --noEmit --project ./tsconfig.test.json",
@@ -38,11 +39,15 @@
     "node": ">=24.15 <25"
   },
   "dependencies": {
-    "dotenv": "^16"
+    "dotenv": "^16",
+    "express": "^5.1.0",
+    "pg": "^8.16.3"
   },
   "devDependencies": {
     "@eslint/js": "^9",
+    "@types/express": "^5.0.3",
     "@types/node": "^24",
+    "@types/pg": "^8.15.6",
     "@vitest/coverage-v8": "^4.1.0",
     "@vitest/eslint-plugin": "^1.6.15",
     "eslint": "^9",

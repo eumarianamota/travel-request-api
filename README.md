@@ -41,3 +41,20 @@ cd typescript
 corepack enable
 yarn install
 ```
+
+## Feature ativa
+
+O repositório agora inclui a primeira vertical slice da API de viagens:
+
+- `POST /trip-requests`
+- persistência em PostgreSQL com SQL direto
+- validação local-first de feriados via BrasilAPI
+
+Fluxo de preparação:
+
+```bash
+yarn db:schema
+yarn dev
+```
+
+Detalhes operacionais em [docs/create-trip-request.md](/home/mariana/Documentos/CSTSC/20261/PBK/travel-request-api/docs/create-trip-request.md).
