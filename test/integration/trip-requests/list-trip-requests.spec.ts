@@ -11,6 +11,10 @@ import { withTestServer } from './test-http.js'
 class InMemoryTripRequestRepository implements TripRequestRepository {
   public constructor(private readonly tripRequests: TripRequest[]) {}
 
+  public async findById(id: number): Promise<TripRequest | null> {
+    return this.tripRequests.find((tripRequest) => tripRequest.id === id) ?? null
+  }
+
   public async list(): Promise<TripRequest[]> {
     return this.tripRequests
   }

@@ -8,6 +8,9 @@ import type { TripRequestRepository } from '#src/trip-requests/application/trip-
 import { withTestServer } from './test-http.js'
 
 const tripRequestRepository: TripRequestRepository = {
+  async findById() {
+    throw new Error('should not lookup invalid requests')
+  },
   async list() {
     return []
   },

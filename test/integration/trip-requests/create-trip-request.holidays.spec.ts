@@ -8,6 +8,9 @@ import type { TripRequestRepository } from '#src/trip-requests/application/trip-
 import { withTestServer } from './test-http.js'
 
 const tripRequestRepository: TripRequestRepository = {
+  async findById() {
+    throw new Error('not implemented in holiday test')
+  },
   async list() {
     return []
   },

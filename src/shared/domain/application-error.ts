@@ -1,5 +1,6 @@
 export type ApplicationErrorCode =
   | 'VALIDATION_ERROR'
+  | 'TRIP_REQUEST_NOT_FOUND'
   | 'HOLIDAY_TRIP_NOT_ALLOWED'
   | 'HOLIDAYS_API_UNAVAILABLE'
   | 'INTERNAL_SERVER_ERROR'
@@ -21,6 +22,9 @@ export const validationError = (message: string): ApplicationError =>
 
 export const holidayTripNotAllowedError = (date: string): ApplicationError =>
   new ApplicationError('HOLIDAY_TRIP_NOT_ALLOWED', `Travel is not allowed on holiday ${date}.`, 409)
+
+export const tripRequestNotFoundError = (): ApplicationError =>
+  new ApplicationError('TRIP_REQUEST_NOT_FOUND', 'Travel request not found.', 404)
 
 export const holidaysApiUnavailableError = (): ApplicationError =>
   new ApplicationError(

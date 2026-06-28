@@ -34,6 +34,33 @@ const mapTripRequestRow = (row: TripRequestRow): TripRequest =>
 export class SqlTripRequestRepository implements TripRequestRepository {
   public constructor(private readonly pool: Pool) {}
 
+  public async findById(id: number): Promise<TripRequest | null> {
+    const result = await this.pool.query<TripRequestRow>(
+      `SELECT
+        id,
+        requester_name,
+        origin,
+        destination,
+        departure_at::text AS departure_at,
+        return_at::text AS return_at,
+        purpose,
+        passenger_count,
+        status,
+        created_at::text AS created_at
+       FROM trip_requests
+       WHERE id = $1`,
+      [id],
+    )
+
+    const row = result.rows[0]
+
+    if (row === undefined) {
+      return null
+    }
+
+    return mapTripRequestRow(row)
+  }
+
   public async list(): Promise<TripRequest[]> {
     const result = await this.pool.query<TripRequestRow>(
       `SELECT

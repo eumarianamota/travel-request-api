@@ -9,6 +9,9 @@ import type { TripRequest, TripRequestDraft } from '#src/trip-requests/domain/tr
 import { withTestServer } from './test-http.js'
 
 const tripRequestRepository: TripRequestRepository = {
+  async findById(): Promise<TripRequest | null> {
+    throw new Error('not implemented in fields test')
+  },
   async list(): Promise<TripRequest[]> {
     return [
       {

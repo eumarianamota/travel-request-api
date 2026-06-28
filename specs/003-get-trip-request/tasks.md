@@ -2,9 +2,9 @@
 
 **Input**: Design documents from `/specs/003-get-trip-request/`
 
-**Prerequisites**: plan.md, spec.md, research.md, data-model.md, contracts/openapi.yaml
+**Prerequisites**: plan.md (required), spec.md (required for user stories), research.md, data-model.md, contracts/
 
-**Tests**: Include automated test tasks for every behavior change in this feature.
+**Tests**: Include automated test tasks for every behavior change unless the feature specification explicitly justifies why tests are not being added.
 
 **Organization**: Tasks are grouped by user story to enable independent implementation and testing of each story.
 
@@ -16,21 +16,21 @@
 
 ## Phase 1: Setup (Shared Infrastructure)
 
-**Purpose**: Prepare shared test and route scaffolding for the new get-by-id slice.
+**Purpose**: Prepare shared artifacts used by all get-by-id scenarios.
 
-- [ ] T001 [P] Add OpenAPI regression coverage for `GET /trip-requests/{id}` in `test/integration/trip-requests/get-trip-request.contract.spec.ts`
-- [ ] T002 [P] Extend request helpers for direct lookup scenarios in `test/integration/trip-requests/test-http.ts`
+- [X] T001 [P] Add contract regression coverage for `GET /trip-requests/{id}` in `test/integration/trip-requests/get-trip-request.contract.spec.ts`
+- [X] T002 [P] Extend shared HTTP helpers for lookup-by-id requests in `test/integration/trip-requests/test-http.ts`
 
 ---
 
 ## Phase 2: Foundational (Blocking Prerequisites)
 
-**Purpose**: Establish shared contracts that all get-by-id behaviors depend on.
+**Purpose**: Establish cross-story contracts for repository lookup and standardized errors.
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T003 [P] Add single-record lookup support to `TripRequestRepository` in `src/trip-requests/application/trip-request-repository.ts`
-- [ ] T004 [P] Add shared not-found application error support in `src/shared/domain/application-error.ts`
+- [X] T003 [P] Add single-record lookup support to `TripRequestRepository` in `src/trip-requests/application/trip-request-repository.ts`
+- [X] T004 [P] Add `TRIP_REQUEST_NOT_FOUND` application error support in `src/shared/domain/application-error.ts`
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
@@ -44,14 +44,14 @@
 
 ### Tests for User Story 1
 
-- [ ] T005 [P] [US1] Add success-path integration coverage in `test/integration/trip-requests/get-trip-request.success.spec.ts`
-- [ ] T006 [P] [US1] Add successful lookup use-case coverage in `test/unit/trip-requests/get-trip-request.spec.ts`
+- [X] T005 [P] [US1] Add success-path integration coverage in `test/integration/trip-requests/get-trip-request.success.spec.ts`
+- [X] T006 [P] [US1] Add successful lookup use-case coverage in `test/unit/trip-requests/get-trip-request.spec.ts`
 
 ### Implementation for User Story 1
 
-- [ ] T007 [US1] Implement the get-by-id use case in `src/trip-requests/application/get-trip-request.ts`
-- [ ] T008 [US1] Implement single-record SQL lookup and row-to-domain mapping reuse in `src/trip-requests/infra/sql-trip-request-repository.ts`
-- [ ] T009 [US1] Expose `GET /trip-requests/:id` through `src/trip-requests/infra/get-trip-request-controller.ts` and `src/trip-requests/infra/register-trip-request-routes.ts`
+- [X] T007 [US1] Implement the get-by-id use case in `src/trip-requests/application/get-trip-request.ts`
+- [X] T008 [US1] Implement single-record SQL lookup with existing row-to-domain mapping in `src/trip-requests/infra/sql-trip-request-repository.ts`
+- [X] T009 [US1] Expose `GET /trip-requests/:id` in `src/trip-requests/infra/get-trip-request-controller.ts` and `src/trip-requests/infra/register-trip-request-routes.ts` without adding new authentication or authorization behavior
 
 **Checkpoint**: At this point, User Story 1 should be fully functional and testable independently
 
@@ -65,12 +65,12 @@
 
 ### Tests for User Story 2
 
-- [ ] T010 [P] [US2] Add not-found integration coverage in `test/integration/trip-requests/get-trip-request.not-found.spec.ts`
-- [ ] T011 [P] [US2] Add missing-record use-case coverage in `test/unit/trip-requests/get-trip-request.spec.ts`
+- [X] T010 [P] [US2] Add not-found integration coverage in `test/integration/trip-requests/get-trip-request.not-found.spec.ts`
+- [X] T011 [P] [US2] Add missing-record use-case coverage in `test/unit/trip-requests/get-trip-request.spec.ts`
 
 ### Implementation for User Story 2
 
-- [ ] T012 [US2] Map missing repository results to `TRIP_REQUEST_NOT_FOUND` in `src/shared/domain/application-error.ts` and `src/trip-requests/application/get-trip-request.ts`
+- [X] T012 [US2] Map absent repository results to `TRIP_REQUEST_NOT_FOUND` in `src/trip-requests/application/get-trip-request.ts`
 
 **Checkpoint**: At this point, User Stories 1 and 2 should both work independently
 
@@ -78,19 +78,19 @@
 
 ## Phase 5: User Story 3 - Reject Invalid Identifier Input Consistently (Priority: P3)
 
-**Goal**: Reject missing, non-numeric, and non-positive identifiers before persistence lookup.
+**Goal**: Reject missing, non-numeric, and non-positive identifiers before persistence lookup while accepting leading-zero positive integers such as `001`.
 
-**Independent Test**: Request `GET /trip-requests/:id` with an invalid identifier value and verify that the response is a standardized validation error.
+**Independent Test**: Request `GET /trip-requests/:id` with an invalid identifier value and verify that the response is a standardized validation error, while `GET /trip-requests/001` is processed as identifier `1`.
 
 ### Tests for User Story 3
 
-- [ ] T013 [P] [US3] Add invalid-identifier integration coverage in `test/integration/trip-requests/get-trip-request.validation.spec.ts`
-- [ ] T014 [P] [US3] Add positive-integer parser coverage in `test/unit/trip-requests/get-trip-request-id.spec.ts`
+- [X] T013 [P] [US3] Add invalid-identifier and leading-zero integration coverage in `test/integration/trip-requests/get-trip-request.validation.spec.ts`
+- [X] T014 [P] [US3] Add positive-integer parser coverage, including `001`, in `test/unit/trip-requests/get-trip-request-id.spec.ts`
 
 ### Implementation for User Story 3
 
-- [ ] T015 [US3] Implement positive-integer trip-request id parsing in `src/trip-requests/domain/trip-request-id.ts`
-- [ ] T016 [US3] Enforce identifier validation before repository lookup in `src/trip-requests/application/get-trip-request.ts` and `src/trip-requests/infra/get-trip-request-controller.ts`
+- [X] T015 [US3] Implement positive-integer trip-request id parsing in `src/trip-requests/domain/trip-request-id.ts`
+- [X] T016 [US3] Enforce identifier validation before repository lookup in `src/trip-requests/application/get-trip-request.ts` and `src/trip-requests/infra/get-trip-request-controller.ts`
 
 **Checkpoint**: All user stories should now be independently functional
 
@@ -98,11 +98,11 @@
 
 ## Phase 6: Polish & Cross-Cutting Concerns
 
-**Purpose**: Finish cross-cutting validation and keep docs aligned with the delivered behavior.
+**Purpose**: Finish failure coverage, documentation alignment, and repository-preferred validation.
 
-- [ ] T017 [P] Add unexpected-failure integration coverage in `test/integration/trip-requests/get-trip-request.internal-error.spec.ts`
-- [ ] T018 [P] Reconcile final examples and validation guidance in `specs/003-get-trip-request/contracts/openapi.yaml` and `specs/003-get-trip-request/quickstart.md`
-- [ ] T019 Run feature validation against `test/integration/trip-requests/get-trip-request*.spec.ts`, `test/unit/trip-requests/get-trip-request*.spec.ts`, and the scripts documented in `package.json`
+- [X] T017 [P] Add unexpected-failure integration coverage in `test/integration/trip-requests/get-trip-request.internal-error.spec.ts`
+- [X] T018 [P] Reconcile lookup examples and validation notes in `specs/003-get-trip-request/contracts/openapi.yaml` and `specs/003-get-trip-request/quickstart.md`
+- [X] T019 Run the repository-preferred validation flow documented in `specs/003-get-trip-request/quickstart.md`
 
 ---
 
@@ -111,21 +111,21 @@
 ### Phase Dependencies
 
 - **Setup (Phase 1)**: No dependencies - can start immediately
-- **Foundational (Phase 2)**: Depends on Setup completion - blocks all user stories
-- **User Stories (Phases 3-5)**: Depend on Foundational completion
-- **Polish (Phase 6)**: Depends on all targeted user stories being complete
+- **Foundational (Phase 2)**: Depends on Setup completion - BLOCKS all user stories
+- **User Stories (Phases 3-5)**: All depend on Foundational phase completion
+- **Polish (Phase 6)**: Depends on all desired user stories being complete
 
 ### User Story Dependencies
 
-- **User Story 1 (P1)**: Starts after Phase 2 and delivers the MVP lookup flow
-- **User Story 2 (P2)**: Starts after Phase 2 and depends on the get-by-id flow from US1
-- **User Story 3 (P3)**: Starts after Phase 2 and depends on the route/use-case flow from US1
+- **User Story 1 (P1)**: Can start after Foundational (Phase 2) - no dependencies on other stories
+- **User Story 2 (P2)**: Can start after Foundational (Phase 2) but depends on the get-by-id flow introduced in US1
+- **User Story 3 (P3)**: Can start after Foundational (Phase 2) but depends on the get-by-id flow introduced in US1
 
 ### Within Each User Story
 
-- Write the listed tests before or alongside implementation when practical
-- Extend repository and domain contracts before controller wiring
-- Complete each story and validate it independently before moving on
+- Tests for changed behavior should be written first when practical
+- Repository and domain contracts come before controller wiring
+- Story behavior should be independently validated before moving on
 
 ### Parallel Opportunities
 
@@ -162,8 +162,8 @@ Task: "Add missing-record use-case coverage in test/unit/trip-requests/get-trip-
 
 ```bash
 # Launch User Story 3 tests together:
-Task: "Add invalid-identifier integration coverage in test/integration/trip-requests/get-trip-request.validation.spec.ts"
-Task: "Add positive-integer parser coverage in test/unit/trip-requests/get-trip-request-id.spec.ts"
+Task: "Add invalid-identifier and leading-zero integration coverage in test/integration/trip-requests/get-trip-request.validation.spec.ts"
+Task: "Add positive-integer parser coverage, including 001, in test/unit/trip-requests/get-trip-request-id.spec.ts"
 ```
 
 ---
@@ -175,15 +175,15 @@ Task: "Add positive-integer parser coverage in test/unit/trip-requests/get-trip-
 1. Complete Phase 1: Setup
 2. Complete Phase 2: Foundational
 3. Complete Phase 3: User Story 1
-4. Validate `GET /trip-requests/:id` success behavior independently before expanding scope
+4. **STOP and VALIDATE**: Test User Story 1 independently
 
 ### Incremental Delivery
 
-1. Finish Setup + Foundational to unblock the slice
-2. Deliver US1 for successful lookup
-3. Add US2 for standardized not-found behavior
-4. Add US3 for identifier validation before lookup
-5. Finish with cross-cutting failure coverage and documented validation
+1. Complete Setup + Foundational
+2. Add User Story 1 → Test independently → Deploy/Demo
+3. Add User Story 2 → Test independently → Deploy/Demo
+4. Add User Story 3 → Test independently → Deploy/Demo
+5. Finish with cross-cutting failure coverage and validation commands
 
 ### Suggested MVP Scope
 

@@ -10,6 +10,9 @@ import { withTestServer } from './test-http.js'
 describe('POST /trip-requests internal error flow', () => {
   it('returns 500 for unexpected failures', async () => {
     const tripRequestRepository: TripRequestRepository = {
+      async findById() {
+        throw new Error('not implemented in create internal-error test')
+      },
       async list() {
         return []
       },

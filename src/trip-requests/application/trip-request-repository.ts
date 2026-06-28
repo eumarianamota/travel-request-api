@@ -2,5 +2,6 @@ import type { TripRequest, TripRequestDraft } from '#src/trip-requests/domain/tr
 
 export interface TripRequestRepository {
   create(input: TripRequestDraft): Promise<TripRequest>
+  findById(id: number): Promise<TripRequest | null>
   list(): Promise<TripRequest[]>
 }

@@ -10,7 +10,9 @@ Implement the `GET /trip-requests/:id` flow as the next vertical slice of the
 API. The feature will retrieve a single persisted travel request by
 identifier, return the complete observable travel-request object in the
 standardized success envelope, reject invalid identifiers with a validation
-error, and map missing records to the standardized not-found contract.
+error, accept leading-zero positive integers such as `001` as the same
+identifier value, and map missing records to the standardized not-found
+contract.
 
 ## Technical Context
 
@@ -35,7 +37,9 @@ missing data, and successful retrieval
 **Constraints**: Use Yarn commands only; preserve feature-oriented
 `domain`/`application`/`infra` boundaries; keep observable statuses limited to
 `requested` and `canceled`; return observable timestamps in
-`YYYY-MM-DDTHH:mm:ss.sssZ`; validate identifiers before repository lookup; keep
+`YYYY-MM-DDTHH:mm:ss.sssZ`; validate identifiers before repository lookup while
+accepting leading-zero positive integers; preserve the current API access model
+without adding new authentication or authorization behavior; keep
 implementation scoped to the get-by-id flow
 
 **Scale/Scope**: One read endpoint, one identifier lookup query, one not-found

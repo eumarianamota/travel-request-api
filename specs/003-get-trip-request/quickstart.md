@@ -77,7 +77,17 @@ Expected outcome:
 - Error code `VALIDATION_ERROR`
 - Response body uses the standard error envelope
 
-### 4. Preserve canonical UTC timestamps and observable statuses
+### 4. Accept leading-zero positive identifiers
+
+Send `GET /trip-requests/001` when travel request `1` exists in storage.
+
+Expected outcome:
+
+- Response status `200`
+- Response body uses the standard success envelope
+- `data.id` is returned as `1`
+
+### 5. Preserve canonical UTC timestamps and observable statuses
 
 Send `GET /trip-requests/{id}` for a stored travel request with canonical trip
 data.
@@ -87,7 +97,7 @@ Expected outcome:
 - `departureAt`, `returnAt`, and `createdAt` are canonical UTC timestamps
 - `status` remains within `requested` or `canceled`
 
-### 5. Map unexpected failures to the standard internal error response
+### 6. Map unexpected failures to the standard internal error response
 
 Force an unexpected persistence failure during `GET /trip-requests/{id}`.
 
@@ -102,7 +112,7 @@ Expected outcome:
 Run validation in repository-preferred order:
 
 ```bash
-yarn test -- test/integration/trip-requests/get-trip-request.spec.ts
+yarn test -- test/integration/trip-requests/get-trip-request*.spec.ts test/unit/trip-requests/get-trip-request*.spec.ts
 yarn type:check
 yarn lint
 yarn test

@@ -34,3 +34,5 @@ export const withTestServer = async <T>(
         })
     })
   })
+
+export const getJson = async (baseUrl: string, path: string): Promise<Response> => fetch(`${baseUrl}${path}`)

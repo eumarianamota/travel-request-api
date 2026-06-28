@@ -50,3 +50,7 @@ Thumbs.db
 .codex/log/
 .codex/*.log
 
+# arquivos meus
+docs/pbak-aval2.pdf
+docs/sandbox.md
+docs/techspec-template.md

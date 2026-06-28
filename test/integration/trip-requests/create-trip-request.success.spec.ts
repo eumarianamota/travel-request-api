@@ -13,6 +13,10 @@ class InMemoryTripRequestRepository implements TripRequestRepository {
 
   public readonly created: TripRequest[] = []
 
+  public async findById(id: number): Promise<TripRequest | null> {
+    return this.created.find((tripRequest) => tripRequest.id === id) ?? null
+  }
+
   public async list(): Promise<TripRequest[]> {
     return this.created
   }
