@@ -18,13 +18,13 @@ Represents the observable travel-request record returned by the list operation.
 | `returnAt` | string | Yes | Returned in canonical UTC format |
 | `purpose` | string | Yes | Preserved as the stored trip purpose |
 | `passengerCount` | integer | Yes | Preserved as the stored positive passenger count |
-| `status` | `requested \| canceled` | Yes | Observable status preserved from the record |
+| `status` | `pending \| canceled` | Yes | Observable status preserved from the record |
 | `createdAt` | string | Yes | Returned in canonical UTC format |
 
 ### Validation Rules
 
 - Every listed item must include all required fields.
-- `status` must remain limited to `requested` or `canceled`.
+- `status` must remain limited to `pending` or `canceled`.
 - `departureAt`, `returnAt`, and `createdAt` must use the canonical UTC format
   `YYYY-MM-DDTHH:mm:ss.sssZ`.
 

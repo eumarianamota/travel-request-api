@@ -75,7 +75,7 @@ Expected outcome:
   `departureAt`, `returnAt`, `purpose`, `passengerCount`, `status`, and
   `createdAt`
 - `departureAt`, `returnAt`, and `createdAt` are canonical UTC timestamps
-- `status` remains within `requested` or `canceled`
+- `status` remains within `pending` or `canceled`
 
 ### 4. Map unexpected failures to the standard internal error response
 

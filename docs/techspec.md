@@ -84,7 +84,7 @@ Tabelas:
 Restrições recomendadas:
 
 - `passenger_count > 0`
-- `status IN ('requested', 'canceled')`
+- `status IN ('pending', 'canceled')`
 - índice em `departure_at`
 - índice em `year`
 
@@ -170,7 +170,7 @@ Cobrir:
 - Organização por feature para manter baixo acoplamento
 - PostgreSQL 17 com SQL direto para manter a solução simples
 - Estratégia local-first para reduzir dependência da BrasilAPI
-- `requested` e `canceled` como únicos estados observáveis
+- `pending` e `canceled` como únicos estados observáveis
 
 ### Riscos Conhecidos
 

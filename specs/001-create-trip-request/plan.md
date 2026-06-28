@@ -32,7 +32,7 @@ API consumers
 
 **Constraints**: Use Yarn commands only; preserve feature-oriented
 `domain`/`application`/`infra` boundaries; keep observable statuses limited to
-`requested` and `canceled`; normalize observable timestamps to
+`pending` and `canceled`; normalize observable timestamps to
 `YYYY-MM-DDTHH:mm:ss.sssZ`; fail creation when mandatory holiday validation
 cannot be completed; keep implementation scoped to the create flow
 
@@ -48,7 +48,7 @@ support future features without implementing those future features now
   orchestration in `application`, and HTTP, database, and gateway code in
   `infra`.
 - PASS: The specification captures explicit success and error contracts,
-  canonical UTC timestamp normalization, and the observable `requested` status
+  canonical UTC timestamp normalization, and the observable `pending` status
   for successful creation.
 - PASS: Holiday validation is modeled as a local-first external dependency
   behind explicit abstractions, with mandatory failure when required remote data

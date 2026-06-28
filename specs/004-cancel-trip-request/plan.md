@@ -35,7 +35,7 @@ contracts
 
 **Constraints**: Use Yarn commands only; preserve feature-oriented
 `domain`/`application`/`infra` boundaries; keep observable statuses limited to
-`requested` and `canceled`; preserve observable timestamps in
+`pending` and `canceled`; preserve observable timestamps in
 `YYYY-MM-DDTHH:mm:ss.sssZ`; validate identifiers before repository update while
 accepting leading-zero positive integers; preserve the current API access model
 without adding new authentication or authorization behavior; keep the change

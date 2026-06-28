@@ -19,12 +19,14 @@ const clearAppEnv = (): void => {
 
 const loadEnvModule = async (): Promise<typeof EnvModule> => {
   vi.resetModules()
+  vi.doMock('dotenv/config', () => ({}))
 
   return import('#src/config/env')
 }
 
 const loadMainModule = async (): Promise<typeof MainModule> => {
   vi.resetModules()
+  vi.doMock('dotenv/config', () => ({}))
 
   return import('#src/main')
 }
@@ -40,6 +42,7 @@ describe('environment configuration', () => {
   afterEach(() => {
     restoreEnv()
     vi.restoreAllMocks()
+    vi.doUnmock('dotenv/config')
   })
 
   it('uses safe defaults when environment variables are missing', async () => {
@@ -106,6 +109,7 @@ describe('bootstrap', () => {
   afterEach(() => {
     restoreEnv()
     vi.restoreAllMocks()
+    vi.doUnmock('dotenv/config')
   })
 
   it('builds the application context from environment configuration', async () => {

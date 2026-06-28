@@ -73,7 +73,7 @@ expected fields with canonical UTC timestamps and observable statuses.
    contains the expected fields and canonical UTC timestamp values.
 2. **Given** registered travel requests include both active and canceled
    records, **When** the user requests the list, **Then** the system includes
-   both `requested` and `canceled` items in the returned list.
+   both `pending` and `canceled` items in the returned list.
 
 ### Edge Cases
 
@@ -108,7 +108,7 @@ expected fields with canonical UTC timestamps and observable statuses.
   `origin`, `destination`, `departureAt`, `returnAt`, `purpose`,
   `passengerCount`, `status`, and `createdAt`.
 - **FR-008**: The system MUST preserve observable statuses in the listing
-  response and limit them to `requested` and `canceled`.
+  response and limit them to `pending` and `canceled`.
 - **FR-009**: The system MUST return `departureAt`, `returnAt`, and `createdAt`
   in the canonical UTC format `YYYY-MM-DDTHH:mm:ss.sssZ`.
 - **FR-010**: The system MUST include both non-canceled and canceled travel

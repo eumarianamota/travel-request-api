@@ -40,7 +40,7 @@
 
 **Goal**: Logically cancel a persisted travel request and return the updated object in the standard success envelope.
 
-**Independent Test**: Persist a travel request with status `requested`, request `PATCH /trip-requests/:id/cancel`, and verify that the response returns the complete travel-request object with status `canceled` in the standard success envelope.
+**Independent Test**: Persist a travel request with status `pending`, request `PATCH /trip-requests/:id/cancel`, and verify that the response returns the complete travel-request object with status `canceled` in the standard success envelope.
 
 ### Tests for User Story 1
 
@@ -89,7 +89,7 @@
 
 ### Implementation for User Story 3
 
-- [X] T015 [US3] Enforce the `requested -> canceled` state transition in `src/trip-requests/application/cancel-trip-request.ts` and `src/trip-requests/domain/trip-request.ts`
+- [X] T015 [US3] Enforce the `pending -> canceled` state transition in `src/trip-requests/application/cancel-trip-request.ts` and `src/trip-requests/domain/trip-request.ts`
 - [X] T016 [US3] Map repeated cancellation attempts to `TRIP_REQUEST_ALREADY_CANCELED` in `src/shared/domain/application-error.ts` and `src/trip-requests/infra/cancel-trip-request-controller.ts`
 
 **Checkpoint**: All user stories should now be independently functional

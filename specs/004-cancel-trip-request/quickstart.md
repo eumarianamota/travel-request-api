@@ -47,7 +47,7 @@ yarn dev
 ### 1. Cancel a stored travel request successfully
 
 Send `PATCH /trip-requests/{id}/cancel` using an existing identifier whose
-status is `requested`.
+status is `pending`.
 
 Expected outcome:
 
@@ -80,7 +80,7 @@ Expected outcome:
 ### 4. Accept leading-zero positive identifiers
 
 Send `PATCH /trip-requests/001/cancel` when travel request `1` exists in
-storage and is still `requested`.
+storage and is still `pending`.
 
 Expected outcome:
 

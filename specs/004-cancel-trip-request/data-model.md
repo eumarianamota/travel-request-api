@@ -19,7 +19,7 @@ cancellation operation.
 | `returnAt` | string | Yes | Preserved in canonical UTC format |
 | `purpose` | string | Yes | Preserved as the stored trip purpose |
 | `passengerCount` | integer | Yes | Preserved as the stored positive passenger count |
-| `status` | `requested \| canceled` | Yes | Changes from `requested` to `canceled` on successful cancellation |
+| `status` | `pending \| canceled` | Yes | Changes from `pending` to `canceled` on successful cancellation |
 | `createdAt` | string | Yes | Preserved in canonical UTC format |
 
 ### Validation Rules
@@ -27,13 +27,13 @@ cancellation operation.
 - The requested identifier must be a positive integer.
 - Leading-zero positive identifiers are valid and map to the same numeric id.
 - A successful cancellation must preserve all required fields.
-- `status` must remain limited to `requested` or `canceled`.
+- `status` must remain limited to `pending` or `canceled`.
 - `departureAt`, `returnAt`, and `createdAt` must use the canonical UTC format
   `YYYY-MM-DDTHH:mm:ss.sssZ`.
 
 ### State Transition Rules
 
-- `requested -> canceled` is the only valid transition in scope for this
+- `pending -> canceled` is the only valid transition in scope for this
   feature.
 - `canceled -> canceled` is invalid and must produce the standardized
   `TRIP_REQUEST_ALREADY_CANCELED` conflict error.

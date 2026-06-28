@@ -131,7 +131,7 @@ components:
         status:
           type: string
           enum:
-            - requested
+            - pending
             - canceled
         createdAt:
           type: string

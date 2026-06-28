@@ -36,7 +36,7 @@ missing data, and successful retrieval
 
 **Constraints**: Use Yarn commands only; preserve feature-oriented
 `domain`/`application`/`infra` boundaries; keep observable statuses limited to
-`requested` and `canceled`; return observable timestamps in
+`pending` and `canceled`; return observable timestamps in
 `YYYY-MM-DDTHH:mm:ss.sssZ`; validate identifiers before repository lookup while
 accepting leading-zero positive integers; preserve the current API access model
 without adding new authentication or authorization behavior; keep

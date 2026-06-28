@@ -52,7 +52,7 @@ Expected outcome:
 - Response status `201`
 - Response body uses the standard success envelope
 - Returned request includes generated `id`, generated `createdAt`, and status
-  `requested`
+  `pending`
 - `departureAt`, `returnAt`, and `createdAt` are canonical UTC timestamps
 
 ### 2. Reject invalid request data

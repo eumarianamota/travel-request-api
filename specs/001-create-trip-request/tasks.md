@@ -63,7 +63,7 @@ feature specification explicitly justifies why tests are not being added.
 
 **Goal**: Accept a valid create request, persist a new travel request, and return the standardized success response
 
-**Independent Test**: Submit a valid `POST /trip-requests` request and verify a persisted response with generated fields, canonical UTC timestamps, and status `requested`
+**Independent Test**: Submit a valid `POST /trip-requests` request and verify a persisted response with generated fields, canonical UTC timestamps, and status `pending`
 
 ### Tests for User Story 1 ⚠️
 

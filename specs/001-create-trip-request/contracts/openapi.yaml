@@ -48,7 +48,7 @@ paths:
                       returnAt: 2026-12-26T11:00:00.000Z
                       purpose: Meeting
                       passengerCount: 2
-                      status: requested
+                      status: pending
                       createdAt: 2026-06-27T12:00:00.000Z
         '400':
           description: Invalid request data
@@ -168,7 +168,7 @@ components:
         status:
           type: string
           enum:
-            - requested
+            - pending
             - canceled
         createdAt:
           type: string

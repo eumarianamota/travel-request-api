@@ -12,7 +12,7 @@ describe('createTripRequestSummary', () => {
         returnAt: '2026-06-24T18:00:00.000Z',
         purpose: 'Meeting',
         passengerCount: 3,
-        status: 'requested',
+        status: 'pending',
         createdAt: '2026-06-20T14:30:00.000Z',
       }),
     ).toStrictEqual({
@@ -24,7 +24,7 @@ describe('createTripRequestSummary', () => {
       returnAt: '2026-06-24T18:00:00.000Z',
       purpose: 'Meeting',
       passengerCount: 3,
-      status: 'requested',
+      status: 'pending',
       createdAt: '2026-06-20T14:30:00.000Z',
     })
   })
@@ -43,6 +43,6 @@ describe('createTripRequestSummary', () => {
         status: 'approved',
         createdAt: '2026-06-20T14:30:00.000Z',
       }),
-    ).toThrow('status must be requested or canceled.')
+    ).toThrow('status must be pending or canceled.')
   })
 })

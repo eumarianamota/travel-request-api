@@ -118,13 +118,13 @@ Os seguintes campos deverão ser gerados pela API:
 - `status`
 - `createdAt`
 
-Nas respostas expostas pela API, os estados observáveis da solicitação serão apenas `requested` e `canceled`.
+Nas respostas expostas pela API, os estados observáveis da solicitação serão apenas `pending` e `canceled`.
 
 Requisitos funcionais:
 
 - RF-01. A API deverá permitir a criação de uma solicitação de viagem com os campos obrigatórios definidos
 - RF-02. A API deverá gerar automaticamente os campos `id`, `status` e `createdAt`
-- RF-03. A API deverá persistir e retornar a solicitação com o status `requested` quando a criação for concluída com sucesso
+- RF-03. A API deverá persistir e retornar a solicitação com o status `pending` quando a criação for concluída com sucesso
 - RF-04. A API deverá validar que todos os campos obrigatórios da requisição foram informados
 - RF-05. A API deverá rejeitar campos obrigatórios vazios
 - RF-06. A API deverá rejeitar campos textuais obrigatórios que resultem em valor vazio após `trim`
@@ -217,7 +217,7 @@ Resposta de sucesso para criação:
     "returnAt": "2026-06-24T18:00:00.000Z",
     "purpose": "Participation in an institutional meeting",
     "passengerCount": 3,
-    "status": "requested",
+    "status": "pending",
     "createdAt": "2026-06-20T14:30:00.000Z"
   }
 }
@@ -238,7 +238,7 @@ Resposta de sucesso para listagem:
       "returnAt": "2026-06-24T18:00:00.000Z",
       "purpose": "Participation in an institutional meeting",
       "passengerCount": 3,
-      "status": "requested",
+      "status": "pending",
       "createdAt": "2026-06-20T14:30:00.000Z"
     }
   ]
@@ -259,7 +259,7 @@ Resposta de sucesso para consulta por identificador:
     "returnAt": "2026-06-24T18:00:00.000Z",
     "purpose": "Participation in an institutional meeting",
     "passengerCount": 3,
-    "status": "requested",
+    "status": "pending",
     "createdAt": "2026-06-20T14:30:00.000Z"
   }
 }
@@ -303,7 +303,7 @@ Resposta de sucesso para consulta de feriados por ano:
 Requisitos funcionais:
 
 - RF-36. A API deverá retornar respostas de sucesso no formato base definido neste documento
-- RF-37. A operação de criação deverá retornar a solicitação criada com status `requested`
+- RF-37. A operação de criação deverá retornar a solicitação criada com status `pending`
 - RF-38. A operação de criação deverá retornar `201 Created`
 - RF-39. A operação de listagem deverá retornar uma lista simples de solicitações no campo `data`
 - RF-40. A operação de listagem deverá retornar `200 OK`

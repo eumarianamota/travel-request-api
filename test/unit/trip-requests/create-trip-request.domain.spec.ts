@@ -5,7 +5,7 @@ describe('createTripRequestDraft', () => {
     expect(normalizeTimestamp('2026-12-24T10:30:00-03:00', 'departureAt')).toBe('2026-12-24T13:30:00.000Z')
   })
 
-  it('creates a requested trip request draft with trimmed text fields', () => {
+  it('creates a pending trip request draft with trimmed text fields', () => {
     expect(
       createTripRequestDraft({
         requesterName: '  Maria  ',
@@ -24,7 +24,7 @@ describe('createTripRequestDraft', () => {
       returnAt: '2026-12-26T11:00:00.000Z',
       purpose: 'Meeting',
       passengerCount: 2,
-      status: 'requested',
+      status: 'pending',
     })
   })
 })

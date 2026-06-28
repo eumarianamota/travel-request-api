@@ -1,6 +1,6 @@
 import { tripRequestAlreadyCanceledError, validationError } from '#src/shared/domain/application-error'
 
-export type TripRequestStatus = 'requested' | 'canceled'
+export type TripRequestStatus = 'pending' | 'canceled'
 
 export interface CreateTripRequestInput {
   requesterName: string
@@ -23,7 +23,7 @@ export interface TripRequestData {
 }
 
 export interface TripRequestDraft extends TripRequestData {
-  status: 'requested'
+  status: 'pending'
 }
 
 export interface TripRequest extends TripRequestData {
@@ -71,11 +71,11 @@ export const normalizeTimestamp = (value: string, fieldName: 'departureAt' | 're
 export const toCivilDate = (normalizedTimestamp: string): string => normalizedTimestamp.slice(0, 10)
 
 const normalizeReadStatus = (status: string): TripRequestStatus => {
-  if (status === 'requested' || status === 'canceled') {
+  if (status === 'pending' || status === 'canceled') {
     return status
   }
 
-  throw validationError('status must be requested or canceled.')
+  throw validationError('status must be pending or canceled.')
 }
 
 export const createTripRequestSummary = (input: TripRequestSummaryInput): TripRequest => ({
@@ -132,7 +132,7 @@ export const createTripRequestDraft = (input: Partial<CreateTripRequestInput>): 
     returnAt,
     purpose,
     passengerCount: input.passengerCount,
-    status: 'requested',
+    status: 'pending',
   }
 }
 

@@ -13,7 +13,7 @@ interface TripRequestRow {
   return_at: string
   purpose: string
   passenger_count: number
-  status: 'requested' | 'canceled'
+  status: 'pending' | 'canceled'
   created_at: string
 }
 
@@ -81,7 +81,7 @@ export class SqlTripRequestRepository implements TripRequestRepository {
     return result.rows.map((row) => mapTripRequestRow(row))
   }
 
-  public async updateStatus(id: number, status: 'requested' | 'canceled'): Promise<TripRequest | null> {
+  public async updateStatus(id: number, status: 'pending' | 'canceled'): Promise<TripRequest | null> {
     const result = await this.pool.query<TripRequestRow>(
       `UPDATE trip_requests
        SET status = $2

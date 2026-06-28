@@ -18,7 +18,7 @@ Represents the travel request record produced when the create flow succeeds.
 | `returnAt` | string | Yes | Accepted as valid ISO 8601 input; must not be earlier than `departureAt` |
 | `purpose` | string | Yes | Must be present and non-empty after trim |
 | `passengerCount` | integer | Yes | Must be a positive integer |
-| `status` | `requested \| canceled` | Generated | Must be `requested` on creation |
+| `status` | `pending \| canceled` | Generated | Must be `pending` on creation |
 | `createdAt` | string | Generated | Canonical UTC timestamp generated during persistence |
 
 ### Validation Rules
@@ -34,7 +34,7 @@ Represents the travel request record produced when the create flow succeeds.
 
 | From | To | Trigger |
 |------|----|---------|
-| not yet created | `requested` | Successful create flow |
+| not yet created | `pending` | Successful create flow |
 
 ### Persistence Mapping
 

@@ -23,7 +23,7 @@ const tripRequestRepository: TripRequestRepository = {
         returnAt: '2026-06-24T18:00:00.000Z',
         purpose: 'Meeting',
         passengerCount: 3,
-        status: 'requested',
+        status: 'pending',
         createdAt: '2026-06-20T14:30:00.000Z',
       },
       {
@@ -94,7 +94,7 @@ describe('GET /trip-requests field shape flow', () => {
         returnAt: '2026-06-24T18:00:00.000Z',
         purpose: 'Meeting',
         passengerCount: 3,
-        status: 'requested',
+        status: 'pending',
         createdAt: '2026-06-20T14:30:00.000Z',
       })
       expect(payload.data[1]?.status).toBe('canceled')

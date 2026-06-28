@@ -34,7 +34,7 @@ identifier, generated creation timestamp, and the expected initial status.
 1. **Given** a user provides all required trip data and the departure date is
    allowed, **When** the user submits the request, **Then** the system creates
    the travel request and returns it with generated fields and status
-   `requested`.
+   `pending`.
 2. **Given** a user provides valid trip data where the departure and return
    dates use accepted ISO 8601 representations, **When** the request is
    created, **Then** the observable timestamps are returned in the canonical UTC
@@ -120,7 +120,7 @@ request is also rejected when required holiday data cannot be obtained.
 - **FR-002**: The system MUST generate `id`, `status`, and `createdAt` for each
   successfully created travel request.
 - **FR-003**: The system MUST persist and return a successfully created travel
-  request with the observable status `requested`.
+  request with the observable status `pending`.
 - **FR-004**: The system MUST reject creation requests when any required field
   is missing.
 - **FR-005**: The system MUST reject creation requests when a required textual
@@ -181,7 +181,7 @@ request is also rejected when required holiday data cannot be obtained.
 
 - **SC-001**: 100% of valid creation attempts result in a registered travel
   request returned with generated identifier, generated creation timestamp, and
-  status `requested`.
+  status `pending`.
 - **SC-002**: 100% of evaluated invalid creation attempts are rejected with the
   standardized error structure and the correct error category.
 - **SC-003**: 100% of evaluated holiday departures are blocked before a travel

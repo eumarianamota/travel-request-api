@@ -114,7 +114,7 @@ error.
   `origin`, `destination`, `departureAt`, `returnAt`, `purpose`,
   `passengerCount`, `status`, and `createdAt`.
 - **FR-006**: The system MUST preserve observable statuses in the lookup
-  response and limit them to `requested` and `canceled`.
+  response and limit them to `pending` and `canceled`.
 - **FR-007**: The system MUST return `departureAt`, `returnAt`, and `createdAt`
   in the canonical UTC format `YYYY-MM-DDTHH:mm:ss.sssZ`.
 - **FR-008**: The system MUST reject identifiers that are missing,

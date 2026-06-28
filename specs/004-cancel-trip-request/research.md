@@ -28,14 +28,14 @@
 ## Decision 3: Model cancellation as a logical status transition
 
 - **Decision**: Keep the travel request persisted and update only its
-  observable `status` from `requested` to `canceled`.
+  observable `status` from `pending` to `canceled`.
 - **Rationale**: The PRD explicitly requires a logical cancellation that
   preserves request history.
 - **Alternatives considered**:
   - Delete the record: rejected because it removes history and violates the
     product rule.
   - Create a separate cancellation record: rejected because the current domain
-    only exposes `requested` and `canceled` as observable statuses.
+    only exposes `pending` and `canceled` as observable statuses.
 
 ## Decision 4: Reject repeated cancellation as a standardized conflict
 

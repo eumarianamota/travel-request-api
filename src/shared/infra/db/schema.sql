@@ -7,9 +7,20 @@ CREATE TABLE IF NOT EXISTS trip_requests (
   return_at TIMESTAMPTZ NOT NULL,
   purpose TEXT NOT NULL,
   passenger_count INTEGER NOT NULL CHECK (passenger_count > 0),
-  status TEXT NOT NULL CHECK (status IN ('requested', 'canceled')),
+  status TEXT NOT NULL CHECK (status IN ('pending', 'canceled')),
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+
+ALTER TABLE trip_requests
+  DROP CONSTRAINT IF EXISTS trip_requests_status_check;
+
+UPDATE trip_requests
+SET status = 'pending'
+WHERE status = 'requested';
+
+ALTER TABLE trip_requests
+  ADD CONSTRAINT trip_requests_status_check
+  CHECK (status IN ('pending', 'canceled'));
 
 CREATE INDEX IF NOT EXISTS trip_requests_departure_at_idx ON trip_requests (departure_at);
 

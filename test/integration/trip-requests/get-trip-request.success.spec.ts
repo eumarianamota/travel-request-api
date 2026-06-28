@@ -54,7 +54,7 @@ describe('GET /trip-requests/:id success flow', () => {
           returnAt: '2026-06-24T18:00:00.000Z',
           purpose: 'Participation in an institutional meeting',
           passengerCount: 3,
-          status: 'requested',
+          status: 'pending',
           createdAt: '2026-06-20T14:30:00.000Z',
         },
       ]),
@@ -76,7 +76,7 @@ describe('GET /trip-requests/:id success flow', () => {
           returnAt: '2026-06-24T18:00:00.000Z',
           purpose: 'Participation in an institutional meeting',
           passengerCount: 3,
-          status: 'requested',
+          status: 'pending',
           createdAt: '2026-06-20T14:30:00.000Z',
         },
       })

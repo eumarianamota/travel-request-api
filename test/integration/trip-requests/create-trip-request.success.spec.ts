@@ -103,7 +103,7 @@ describe('POST /trip-requests success flow', () => {
           returnAt: '2026-12-26T11:00:00.000Z',
           purpose: 'Meeting',
           passengerCount: 2,
-          status: 'requested',
+          status: 'pending',
           createdAt: '2026-06-27T12:00:00.000Z',
         },
       })

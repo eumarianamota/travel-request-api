@@ -8,7 +8,7 @@ import { createCancelTripRequestUseCase } from '#src/trip-requests/application/c
 import type { TripRequestRepository } from '#src/trip-requests/application/trip-request-repository'
 
 describe('createCancelTripRequestUseCase', () => {
-  it('cancels a requested trip request and returns the updated object', async () => {
+  it('cancels a pending trip request and returns the updated object', async () => {
     const tripRequestRepository = mock<TripRequestRepository>()
     tripRequestRepository.findById.mockResolvedValue({
       id: 1,
@@ -19,7 +19,7 @@ describe('createCancelTripRequestUseCase', () => {
       returnAt: '2026-06-24T18:00:00.000Z',
       purpose: 'Meeting',
       passengerCount: 3,
-      status: 'requested',
+      status: 'pending',
       createdAt: '2026-06-20T14:30:00.000Z',
     })
     tripRequestRepository.updateStatus.mockResolvedValue({
