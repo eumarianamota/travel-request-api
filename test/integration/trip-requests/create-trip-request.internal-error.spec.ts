@@ -4,6 +4,7 @@ import type { HolidaysGateway } from '#src/holidays/application/holidays-gateway
 import { createApp } from '#src/shared/infra/http/create-app'
 import { createLogger } from '#src/shared/infra/http/logger'
 import type { TripRequestRepository } from '#src/trip-requests/application/trip-request-repository'
+import type { TripRequestStatus } from '#src/trip-requests/domain/trip-request'
 
 import { withTestServer } from './test-http.js'
 
@@ -18,6 +19,9 @@ describe('POST /trip-requests internal error flow', () => {
       },
       async create() {
         throw new Error('database offline')
+      },
+      async updateStatus(_id: number, _status: TripRequestStatus) {
+        return null
       },
     }
 

@@ -17,6 +17,9 @@ const tripRequestRepository: TripRequestRepository = {
   async create() {
     throw new Error('should not persist blocked requests')
   },
+  async updateStatus() {
+    throw new Error('not implemented in holiday test')
+  },
 }
 
 describe('POST /trip-requests holiday flow', () => {

@@ -1,4 +1,4 @@
-import { validationError } from '#src/shared/domain/application-error'
+import { tripRequestAlreadyCanceledError, validationError } from '#src/shared/domain/application-error'
 
 export type TripRequestStatus = 'requested' | 'canceled'
 
@@ -133,5 +133,16 @@ export const createTripRequestDraft = (input: Partial<CreateTripRequestInput>): 
     purpose,
     passengerCount: input.passengerCount,
     status: 'requested',
+  }
+}
+
+export const cancelTripRequest = (tripRequest: TripRequest): TripRequest => {
+  if (tripRequest.status === 'canceled') {
+    throw tripRequestAlreadyCanceledError()
+  }
+
+  return {
+    ...tripRequest,
+    status: 'canceled',
   }
 }

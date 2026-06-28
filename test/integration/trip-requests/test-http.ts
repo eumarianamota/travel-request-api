@@ -36,3 +36,11 @@ export const withTestServer = async <T>(
   })
 
 export const getJson = async (baseUrl: string, path: string): Promise<Response> => fetch(`${baseUrl}${path}`)
+
+export const patchJson = async (baseUrl: string, path: string): Promise<Response> =>
+  fetch(`${baseUrl}${path}`, {
+    method: 'PATCH',
+    headers: {
+      accept: 'application/json',
+    },
+  })

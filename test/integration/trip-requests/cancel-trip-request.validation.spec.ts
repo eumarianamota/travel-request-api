@@ -4,36 +4,34 @@ import { createLogger } from '#src/shared/infra/http/logger'
 import type { TripRequestRepository } from '#src/trip-requests/application/trip-request-repository'
 import type { TripRequest, TripRequestDraft, TripRequestStatus } from '#src/trip-requests/domain/trip-request'
 
-import { getJson, withTestServer } from './test-http.js'
+import { patchJson, withTestServer } from './test-http.js'
 
-const tripRequestRepository: TripRequestRepository = {
-  async create(_input: TripRequestDraft): Promise<TripRequest> {
-    throw new Error('not implemented in get-by-id validation test')
-  },
-  async findById(id: number): Promise<TripRequest | null> {
-    if (id === 1) {
-      return {
-        id: 1,
-        requesterName: 'Maria Silva',
-        origin: 'Parnaiba',
-        destination: 'Teresina',
-        departureAt: '2026-06-24T10:00:00.000Z',
-        returnAt: '2026-06-24T18:00:00.000Z',
-        purpose: 'Participation in an institutional meeting',
-        passengerCount: 3,
-        status: 'requested',
-        createdAt: '2026-06-20T14:30:00.000Z',
-      }
+class InMemoryTripRequestRepository implements TripRequestRepository {
+  public constructor(private readonly tripRequests: TripRequest[]) {}
+
+  public async create(_input: TripRequestDraft): Promise<TripRequest> {
+    throw new Error('not implemented in cancel validation test')
+  }
+
+  public async findById(id: number): Promise<TripRequest | null> {
+    return this.tripRequests.find((tripRequest) => tripRequest.id === id) ?? null
+  }
+
+  public async list(): Promise<TripRequest[]> {
+    return this.tripRequests
+  }
+
+  public async updateStatus(id: number, status: TripRequestStatus): Promise<TripRequest | null> {
+    const tripRequest = this.tripRequests.find((item) => item.id === id)
+
+    if (tripRequest === undefined) {
+      return null
     }
 
-    return null
-  },
-  async list(): Promise<TripRequest[]> {
-    return []
-  },
-  async updateStatus(_id: number, _status: TripRequestStatus): Promise<TripRequest | null> {
-    return null
-  },
+    tripRequest.status = status
+
+    return tripRequest
+  }
 }
 
 const holidayValidationService: HolidayValidationService = {
@@ -42,18 +40,18 @@ const holidayValidationService: HolidayValidationService = {
   },
 }
 
-describe('GET /trip-requests/:id validation flow', () => {
-  it('returns 400 for non-positive and non-numeric identifiers', async () => {
+describe('PATCH /trip-requests/:id/cancel validation flow', () => {
+  it('returns 400 for invalid identifiers', async () => {
     const app = createApp({
       logger: createLogger('test'),
-      tripRequestRepository,
+      tripRequestRepository: new InMemoryTripRequestRepository([]),
       holidayValidationService,
     })
 
     await withTestServer(app, async (baseUrl: string) => {
       const invalidResponses = await Promise.all([
-        getJson(baseUrl, '/trip-requests/0'),
-        getJson(baseUrl, '/trip-requests/abc'),
+        patchJson(baseUrl, '/trip-requests/0/cancel'),
+        patchJson(baseUrl, '/trip-requests/abc/cancel'),
       ])
 
       expect(invalidResponses[0].status).toBe(400)
@@ -79,18 +77,32 @@ describe('GET /trip-requests/:id validation flow', () => {
   it('accepts leading-zero positive identifiers and treats them as the same numeric id', async () => {
     const app = createApp({
       logger: createLogger('test'),
-      tripRequestRepository,
+      tripRequestRepository: new InMemoryTripRequestRepository([
+        {
+          id: 1,
+          requesterName: 'Maria Silva',
+          origin: 'Parnaiba',
+          destination: 'Teresina',
+          departureAt: '2026-06-24T10:00:00.000Z',
+          returnAt: '2026-06-24T18:00:00.000Z',
+          purpose: 'Participation in an institutional meeting',
+          passengerCount: 3,
+          status: 'requested',
+          createdAt: '2026-06-20T14:30:00.000Z',
+        },
+      ]),
       holidayValidationService,
     })
 
     await withTestServer(app, async (baseUrl: string) => {
-      const response = await getJson(baseUrl, '/trip-requests/001')
+      const response = await patchJson(baseUrl, '/trip-requests/001/cancel')
 
       expect(response.status).toBe(200)
       await expect(response.json()).resolves.toMatchObject({
         success: true,
         data: {
           id: 1,
+          status: 'canceled',
         },
       })
     })

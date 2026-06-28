@@ -18,8 +18,8 @@
 
 **Purpose**: Prepare shared artifacts used by all cancellation scenarios.
 
-- [ ] T001 [P] Add contract regression coverage for `PATCH /trip-requests/{id}/cancel` in `test/integration/trip-requests/cancel-trip-request.contract.spec.ts`
-- [ ] T002 [P] Extend shared HTTP helpers for cancellation requests in `test/integration/trip-requests/test-http.ts`
+- [X] T001 [P] Add contract regression coverage for `PATCH /trip-requests/{id}/cancel` in `test/integration/trip-requests/cancel-trip-request.contract.spec.ts`
+- [X] T002 [P] Extend shared HTTP helpers for cancellation requests in `test/integration/trip-requests/test-http.ts`
 
 ---
 
@@ -29,8 +29,8 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T003 [P] Add logical status update support to `TripRequestRepository` in `src/trip-requests/application/trip-request-repository.ts`
-- [ ] T004 [P] Add `TRIP_REQUEST_ALREADY_CANCELED` application error support in `src/shared/domain/application-error.ts`
+- [X] T003 [P] Add logical status update support to `TripRequestRepository` in `src/trip-requests/application/trip-request-repository.ts`
+- [X] T004 [P] Add `TRIP_REQUEST_ALREADY_CANCELED` application error support in `src/shared/domain/application-error.ts`
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
@@ -44,14 +44,14 @@
 
 ### Tests for User Story 1
 
-- [ ] T005 [P] [US1] Add success-path integration coverage in `test/integration/trip-requests/cancel-trip-request.success.spec.ts`
-- [ ] T006 [P] [US1] Add successful cancellation use-case coverage in `test/unit/trip-requests/cancel-trip-request.spec.ts`
+- [X] T005 [P] [US1] Add success-path integration coverage in `test/integration/trip-requests/cancel-trip-request.success.spec.ts`
+- [X] T006 [P] [US1] Add successful cancellation use-case coverage in `test/unit/trip-requests/cancel-trip-request.spec.ts`
 
 ### Implementation for User Story 1
 
-- [ ] T007 [US1] Implement the cancel-trip-request use case in `src/trip-requests/application/cancel-trip-request.ts`
-- [ ] T008 [US1] Implement logical status update lookup and persistence in `src/trip-requests/infra/sql-trip-request-repository.ts`
-- [ ] T009 [US1] Expose `PATCH /trip-requests/:id/cancel` in `src/trip-requests/infra/cancel-trip-request-controller.ts` and `src/trip-requests/infra/register-trip-request-routes.ts` without adding new authentication or authorization behavior
+- [X] T007 [US1] Implement the cancel-trip-request use case in `src/trip-requests/application/cancel-trip-request.ts`
+- [X] T008 [US1] Implement logical status update lookup and persistence in `src/trip-requests/infra/sql-trip-request-repository.ts`
+- [X] T009 [US1] Expose `PATCH /trip-requests/:id/cancel` in `src/trip-requests/infra/cancel-trip-request-controller.ts` and `src/trip-requests/infra/register-trip-request-routes.ts` without adding new authentication or authorization behavior
 
 **Checkpoint**: At this point, User Story 1 should be fully functional and testable independently
 
@@ -65,12 +65,12 @@
 
 ### Tests for User Story 2
 
-- [ ] T010 [P] [US2] Add not-found integration coverage in `test/integration/trip-requests/cancel-trip-request.not-found.spec.ts`
-- [ ] T011 [P] [US2] Add missing-record cancellation use-case coverage in `test/unit/trip-requests/cancel-trip-request.spec.ts`
+- [X] T010 [P] [US2] Add not-found integration coverage in `test/integration/trip-requests/cancel-trip-request.not-found.spec.ts`
+- [X] T011 [P] [US2] Add missing-record cancellation use-case coverage in `test/unit/trip-requests/cancel-trip-request.spec.ts`
 
 ### Implementation for User Story 2
 
-- [ ] T012 [US2] Map absent repository results to `TRIP_REQUEST_NOT_FOUND` in `src/trip-requests/application/cancel-trip-request.ts`
+- [X] T012 [US2] Map absent repository results to `TRIP_REQUEST_NOT_FOUND` in `src/trip-requests/application/cancel-trip-request.ts`
 
 **Checkpoint**: At this point, User Stories 1 and 2 should both work independently
 
@@ -84,13 +84,13 @@
 
 ### Tests for User Story 3
 
-- [ ] T013 [P] [US3] Add already-canceled integration coverage in `test/integration/trip-requests/cancel-trip-request.conflict.spec.ts`
-- [ ] T014 [P] [US3] Add invalid-state cancellation use-case coverage in `test/unit/trip-requests/cancel-trip-request.spec.ts`
+- [X] T013 [P] [US3] Add already-canceled integration coverage in `test/integration/trip-requests/cancel-trip-request.conflict.spec.ts`
+- [X] T014 [P] [US3] Add invalid-state cancellation use-case coverage in `test/unit/trip-requests/cancel-trip-request.spec.ts`
 
 ### Implementation for User Story 3
 
-- [ ] T015 [US3] Enforce the `requested -> canceled` state transition in `src/trip-requests/application/cancel-trip-request.ts` and `src/trip-requests/domain/trip-request.ts`
-- [ ] T016 [US3] Map repeated cancellation attempts to `TRIP_REQUEST_ALREADY_CANCELED` in `src/shared/domain/application-error.ts` and `src/trip-requests/infra/cancel-trip-request-controller.ts`
+- [X] T015 [US3] Enforce the `requested -> canceled` state transition in `src/trip-requests/application/cancel-trip-request.ts` and `src/trip-requests/domain/trip-request.ts`
+- [X] T016 [US3] Map repeated cancellation attempts to `TRIP_REQUEST_ALREADY_CANCELED` in `src/shared/domain/application-error.ts` and `src/trip-requests/infra/cancel-trip-request-controller.ts`
 
 **Checkpoint**: All user stories should now be independently functional
 
@@ -100,10 +100,10 @@
 
 **Purpose**: Finish identifier validation coverage, failure coverage, and documentation alignment.
 
-- [ ] T017 [P] Add invalid-identifier and leading-zero integration coverage in `test/integration/trip-requests/cancel-trip-request.validation.spec.ts` and parser coverage in `test/unit/trip-requests/cancel-trip-request-id.spec.ts`
-- [ ] T018 [P] Add unexpected-failure integration coverage in `test/integration/trip-requests/cancel-trip-request.internal-error.spec.ts`
-- [ ] T019 [P] Reconcile cancellation examples and validation notes in `specs/004-cancel-trip-request/contracts/openapi.yaml` and `specs/004-cancel-trip-request/quickstart.md`
-- [ ] T020 Run the repository-preferred validation flow documented in `specs/004-cancel-trip-request/quickstart.md`
+- [X] T017 [P] Add invalid-identifier and leading-zero integration coverage in `test/integration/trip-requests/cancel-trip-request.validation.spec.ts` and parser coverage in `test/unit/trip-requests/cancel-trip-request-id.spec.ts`
+- [X] T018 [P] Add unexpected-failure integration coverage in `test/integration/trip-requests/cancel-trip-request.internal-error.spec.ts`
+- [X] T019 [P] Reconcile cancellation examples and validation notes in `specs/004-cancel-trip-request/contracts/openapi.yaml` and `specs/004-cancel-trip-request/quickstart.md`
+- [X] T020 Run the repository-preferred validation flow documented in `specs/004-cancel-trip-request/quickstart.md`
 
 ---
 

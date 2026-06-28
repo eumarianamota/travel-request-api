@@ -81,6 +81,34 @@ export class SqlTripRequestRepository implements TripRequestRepository {
     return result.rows.map((row) => mapTripRequestRow(row))
   }
 
+  public async updateStatus(id: number, status: 'requested' | 'canceled'): Promise<TripRequest | null> {
+    const result = await this.pool.query<TripRequestRow>(
+      `UPDATE trip_requests
+       SET status = $2
+       WHERE id = $1
+       RETURNING
+         id,
+         requester_name,
+         origin,
+         destination,
+         departure_at::text AS departure_at,
+         return_at::text AS return_at,
+         purpose,
+         passenger_count,
+         status,
+         created_at::text AS created_at`,
+      [id, status],
+    )
+
+    const row = result.rows[0]
+
+    if (row === undefined) {
+      return null
+    }
+
+    return mapTripRequestRow(row)
+  }
+
   public async create(input: TripRequestDraft): Promise<TripRequest> {
     const result = await this.pool.query<TripRequestRow>(
       `INSERT INTO trip_requests (

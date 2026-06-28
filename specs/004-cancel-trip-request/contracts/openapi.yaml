@@ -18,8 +18,8 @@ paths:
           required: true
           description: Positive integer identifier. Leading-zero positive values such as `001` are accepted and normalized to the same numeric id.
           schema:
-            type: integer
-            minimum: 1
+            type: string
+            pattern: '^[0-9]+$'
       responses:
         '200':
           description: Travel request canceled successfully

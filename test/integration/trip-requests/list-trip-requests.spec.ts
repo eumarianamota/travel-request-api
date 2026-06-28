@@ -4,7 +4,7 @@ import type { HolidaysGateway } from '#src/holidays/application/holidays-gateway
 import { createApp } from '#src/shared/infra/http/create-app'
 import { createLogger } from '#src/shared/infra/http/logger'
 import type { TripRequestRepository } from '#src/trip-requests/application/trip-request-repository'
-import type { TripRequest, TripRequestDraft } from '#src/trip-requests/domain/trip-request'
+import type { TripRequest, TripRequestDraft, TripRequestStatus } from '#src/trip-requests/domain/trip-request'
 
 import { withTestServer } from './test-http.js'
 
@@ -21,6 +21,18 @@ class InMemoryTripRequestRepository implements TripRequestRepository {
 
   public async create(_input: TripRequestDraft): Promise<TripRequest> {
     throw new Error('not implemented in list tests')
+  }
+
+  public async updateStatus(id: number, status: TripRequestStatus): Promise<TripRequest | null> {
+    const tripRequest = this.tripRequests.find((item) => item.id === id)
+
+    if (tripRequest === undefined) {
+      return null
+    }
+
+    tripRequest.status = status
+
+    return tripRequest
   }
 }
 

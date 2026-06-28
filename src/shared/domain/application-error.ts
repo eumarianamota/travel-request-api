@@ -1,6 +1,7 @@
 export type ApplicationErrorCode =
   | 'VALIDATION_ERROR'
   | 'TRIP_REQUEST_NOT_FOUND'
+  | 'TRIP_REQUEST_ALREADY_CANCELED'
   | 'HOLIDAY_TRIP_NOT_ALLOWED'
   | 'HOLIDAYS_API_UNAVAILABLE'
   | 'INTERNAL_SERVER_ERROR'
@@ -25,6 +26,9 @@ export const holidayTripNotAllowedError = (date: string): ApplicationError =>
 
 export const tripRequestNotFoundError = (): ApplicationError =>
   new ApplicationError('TRIP_REQUEST_NOT_FOUND', 'Travel request not found.', 404)
+
+export const tripRequestAlreadyCanceledError = (): ApplicationError =>
+  new ApplicationError('TRIP_REQUEST_ALREADY_CANCELED', 'Travel request is already canceled.', 409)
 
 export const holidaysApiUnavailableError = (): ApplicationError =>
   new ApplicationError(

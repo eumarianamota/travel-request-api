@@ -87,6 +87,7 @@ Expected outcome:
 - Response status `200`
 - Response body uses the standard success envelope
 - `data.id` is returned as `1`
+- `data.status` is returned as `canceled`
 
 ### 5. Reject repeated cancellation attempts
 

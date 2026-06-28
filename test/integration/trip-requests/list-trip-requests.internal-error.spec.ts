@@ -4,7 +4,7 @@ import type { HolidaysGateway } from '#src/holidays/application/holidays-gateway
 import { createApp } from '#src/shared/infra/http/create-app'
 import { createLogger } from '#src/shared/infra/http/logger'
 import type { TripRequestRepository } from '#src/trip-requests/application/trip-request-repository'
-import type { TripRequest, TripRequestDraft } from '#src/trip-requests/domain/trip-request'
+import type { TripRequest, TripRequestDraft, TripRequestStatus } from '#src/trip-requests/domain/trip-request'
 
 import { withTestServer } from './test-http.js'
 
@@ -17,6 +17,9 @@ const tripRequestRepository: TripRequestRepository = {
   },
   async create(_input: TripRequestDraft): Promise<TripRequest> {
     throw new Error('not implemented in internal-error test')
+  },
+  async updateStatus(_id: number, _status: TripRequestStatus): Promise<TripRequest | null> {
+    return null
   },
 }
 

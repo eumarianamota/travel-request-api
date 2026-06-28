@@ -4,14 +4,14 @@ import { createLogger } from '#src/shared/infra/http/logger'
 import type { TripRequestRepository } from '#src/trip-requests/application/trip-request-repository'
 import type { TripRequest, TripRequestDraft, TripRequestStatus } from '#src/trip-requests/domain/trip-request'
 
-import { getJson, withTestServer } from './test-http.js'
+import { patchJson, withTestServer } from './test-http.js'
 
 const tripRequestRepository: TripRequestRepository = {
   async create(_input: TripRequestDraft): Promise<TripRequest> {
-    throw new Error('not implemented in get-by-id internal-error test')
+    throw new Error('not implemented in cancel not-found test')
   },
   async findById(): Promise<TripRequest | null> {
-    throw new Error('database offline')
+    return null
   },
   async list(): Promise<TripRequest[]> {
     return []
@@ -27,8 +27,8 @@ const holidayValidationService: HolidayValidationService = {
   },
 }
 
-describe('GET /trip-requests/:id internal error flow', () => {
-  it('returns 500 for unexpected failures', async () => {
+describe('PATCH /trip-requests/:id/cancel not-found flow', () => {
+  it('returns 404 with the standardized not-found error', async () => {
     const app = createApp({
       logger: createLogger('test'),
       tripRequestRepository,
@@ -36,14 +36,14 @@ describe('GET /trip-requests/:id internal error flow', () => {
     })
 
     await withTestServer(app, async (baseUrl: string) => {
-      const response = await getJson(baseUrl, '/trip-requests/1')
+      const response = await patchJson(baseUrl, '/trip-requests/999/cancel')
 
-      expect(response.status).toBe(500)
+      expect(response.status).toBe(404)
       await expect(response.json()).resolves.toStrictEqual({
         success: false,
         error: {
-          code: 'INTERNAL_SERVER_ERROR',
-          message: 'An unexpected internal error occurred.',
+          code: 'TRIP_REQUEST_NOT_FOUND',
+          message: 'Travel request not found.',
         },
       })
     })

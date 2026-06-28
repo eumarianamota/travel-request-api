@@ -2,7 +2,7 @@ import type { HolidayValidationService } from '#src/holidays/application/holiday
 import { createApp } from '#src/shared/infra/http/create-app'
 import { createLogger } from '#src/shared/infra/http/logger'
 import type { TripRequestRepository } from '#src/trip-requests/application/trip-request-repository'
-import type { TripRequest, TripRequestDraft } from '#src/trip-requests/domain/trip-request'
+import type { TripRequest, TripRequestDraft, TripRequestStatus } from '#src/trip-requests/domain/trip-request'
 
 import { getJson, withTestServer } from './test-http.js'
 
@@ -15,6 +15,9 @@ const tripRequestRepository: TripRequestRepository = {
   },
   async list(): Promise<TripRequest[]> {
     return []
+  },
+  async updateStatus(_id: number, _status: TripRequestStatus): Promise<TripRequest | null> {
+    return null
   },
 }
 
