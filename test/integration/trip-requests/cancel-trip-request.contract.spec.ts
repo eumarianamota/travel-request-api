@@ -6,6 +6,10 @@ describe('cancel trip request OpenAPI contract', () => {
       new URL('../../../specs/004-cancel-trip-request/contracts/openapi.yaml', import.meta.url),
       'utf8',
     )
+    const errorContract = await readFile(
+      new URL('../../../specs/007-standardize-error-responses/contracts/openapi.yaml', import.meta.url),
+      'utf8',
+    )
     const successContract = await readFile(
       new URL('../../../specs/006-standardize-success-responses/contracts/openapi.yaml', import.meta.url),
       'utf8',
@@ -20,6 +24,16 @@ describe('cancel trip request OpenAPI contract', () => {
     expect(cancelContract).toContain("'500':")
     expect(cancelContract).toContain('const: TRIP_REQUEST_ALREADY_CANCELED')
     expect(cancelContract).toContain('const: INTERNAL_SERVER_ERROR')
+    expect(errorContract).toContain('/trip-requests/{id}/cancel:')
+    expect(errorContract).toContain('operationId: cancelTripRequest')
+    expect(errorContract).toContain("'400':")
+    expect(errorContract).toContain("'404':")
+    expect(errorContract).toContain("'409':")
+    expect(errorContract).toContain("'500':")
+    expect(errorContract).toContain('ValidationErrorResponse')
+    expect(errorContract).toContain('TripRequestNotFoundErrorResponse')
+    expect(errorContract).toContain('TripRequestAlreadyCanceledErrorResponse')
+    expect(errorContract).toContain('InternalServerErrorResponse')
     expect(successContract).toContain('/trip-requests/{id}/cancel:')
     expect(successContract).toContain('TripRequestObjectSuccessResponse')
     expect(successContract).toContain('const: true')

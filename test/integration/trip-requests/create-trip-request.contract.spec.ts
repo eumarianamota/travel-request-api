@@ -6,6 +6,10 @@ describe('create trip request OpenAPI contract', () => {
       new URL('../../../specs/001-create-trip-request/contracts/openapi.yaml', import.meta.url),
       'utf8',
     )
+    const errorContract = await readFile(
+      new URL('../../../specs/007-standardize-error-responses/contracts/openapi.yaml', import.meta.url),
+      'utf8',
+    )
     const successContract = await readFile(
       new URL('../../../specs/006-standardize-success-responses/contracts/openapi.yaml', import.meta.url),
       'utf8',
@@ -21,6 +25,16 @@ describe('create trip request OpenAPI contract', () => {
     expect(createContract).toContain('const: HOLIDAY_TRIP_NOT_ALLOWED')
     expect(createContract).toContain('const: HOLIDAYS_API_UNAVAILABLE')
     expect(createContract).toContain('const: INTERNAL_SERVER_ERROR')
+    expect(errorContract).toContain('/trip-requests:')
+    expect(errorContract).toContain('operationId: createTripRequest')
+    expect(errorContract).toContain("'400':")
+    expect(errorContract).toContain("'409':")
+    expect(errorContract).toContain("'502':")
+    expect(errorContract).toContain("'500':")
+    expect(errorContract).toContain('ValidationErrorResponse')
+    expect(errorContract).toContain('HolidayTripNotAllowedErrorResponse')
+    expect(errorContract).toContain('HolidaysApiUnavailableErrorResponse')
+    expect(errorContract).toContain('InternalServerErrorResponse')
     expect(successContract).toContain('/trip-requests:')
     expect(successContract).toContain("'201':")
     expect(successContract).toContain('TripRequestObjectSuccessResponse')

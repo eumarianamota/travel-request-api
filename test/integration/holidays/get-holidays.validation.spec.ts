@@ -6,7 +6,7 @@ import { createLogger } from '#src/shared/infra/http/logger'
 import type { TripRequestRepository } from '#src/trip-requests/application/trip-request-repository'
 import type { TripRequest, TripRequestDraft, TripRequestStatus } from '#src/trip-requests/domain/trip-request'
 
-import { getHolidaysByYear, withTestServer } from '../trip-requests/test-http.js'
+import { expectErrorResponse, getHolidaysByYear, withTestServer } from '../trip-requests/test-http.js'
 
 const holidayRepository: HolidayRepository = {
   async findByYear() {
@@ -49,6 +49,8 @@ const holidayValidationService: HolidayValidationService = {
 
 describe('GET /holidays/:year validation flow', () => {
   it('returns 400 for a non-numeric year', async () => {
+    expect.hasAssertions()
+
     const app = createApp({
       logger: createLogger('test'),
       tripRequestRepository: new StubTripRequestRepository(),
@@ -62,18 +64,16 @@ describe('GET /holidays/:year validation flow', () => {
     await withTestServer(app, async (baseUrl: string) => {
       const response = await getHolidaysByYear(baseUrl, 'abc')
 
-      expect(response.status).toBe(400)
-      await expect(response.json()).resolves.toStrictEqual({
-        success: false,
-        error: {
-          code: 'VALIDATION_ERROR',
-          message: 'year must be a positive integer.',
-        },
+      await expectErrorResponse(response, 400, {
+        code: 'VALIDATION_ERROR',
+        message: 'year must be a positive integer.',
       })
     })
   })
 
   it('returns 400 for a non-positive year', async () => {
+    expect.hasAssertions()
+
     const app = createApp({
       logger: createLogger('test'),
       tripRequestRepository: new StubTripRequestRepository(),
@@ -87,13 +87,9 @@ describe('GET /holidays/:year validation flow', () => {
     await withTestServer(app, async (baseUrl: string) => {
       const response = await getHolidaysByYear(baseUrl, '0')
 
-      expect(response.status).toBe(400)
-      await expect(response.json()).resolves.toStrictEqual({
-        success: false,
-        error: {
-          code: 'VALIDATION_ERROR',
-          message: 'year must be a positive integer.',
-        },
+      await expectErrorResponse(response, 400, {
+        code: 'VALIDATION_ERROR',
+        message: 'year must be a positive integer.',
       })
     })
   })

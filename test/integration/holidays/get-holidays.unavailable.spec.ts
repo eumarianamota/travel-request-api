@@ -6,7 +6,7 @@ import { createLogger } from '#src/shared/infra/http/logger'
 import type { TripRequestRepository } from '#src/trip-requests/application/trip-request-repository'
 import type { TripRequest, TripRequestDraft, TripRequestStatus } from '#src/trip-requests/domain/trip-request'
 
-import { getHolidaysByYear, withTestServer } from '../trip-requests/test-http.js'
+import { expectErrorResponse, getHolidaysByYear, withTestServer } from '../trip-requests/test-http.js'
 
 const holidayRepository: HolidayRepository = {
   async findByYear() {
@@ -43,6 +43,8 @@ const holidayValidationService: HolidayValidationService = {
 
 describe('GET /holidays/:year provider unavailable flow', () => {
   it('returns 502 when the requested uncached year depends on an unavailable provider', async () => {
+    expect.hasAssertions()
+
     const holidaysGateway: HolidaysGateway = {
       async fetchNationalHolidays() {
         throw new Error('network')
@@ -61,13 +63,9 @@ describe('GET /holidays/:year provider unavailable flow', () => {
     await withTestServer(app, async (baseUrl: string) => {
       const response = await getHolidaysByYear(baseUrl, 2027)
 
-      expect(response.status).toBe(502)
-      await expect(response.json()).resolves.toStrictEqual({
-        success: false,
-        error: {
-          code: 'HOLIDAYS_API_UNAVAILABLE',
-          message: 'Required holiday validation is currently unavailable.',
-        },
+      await expectErrorResponse(response, 502, {
+        code: 'HOLIDAYS_API_UNAVAILABLE',
+        message: 'Required holiday validation is currently unavailable.',
       })
     })
   })

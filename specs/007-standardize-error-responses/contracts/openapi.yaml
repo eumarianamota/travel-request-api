@@ -1,0 +1,324 @@
+openapi: 3.1.0
+info:
+  title: Travel Request API - Error Response Standardization
+  version: 1.0.0
+  description: Error response envelope contract for currently exposed API operations.
+servers:
+  - url: http://localhost:3030
+paths:
+  /trip-requests:
+    post:
+      summary: Create a trip request
+      operationId: createTripRequest
+      responses:
+        '400':
+          description: Validation failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorResponse'
+              examples:
+                default:
+                  value:
+                    success: false
+                    error:
+                      code: VALIDATION_ERROR
+                      message: purpose must not be blank.
+        '409':
+          description: Holiday business-rule violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HolidayTripNotAllowedErrorResponse'
+              examples:
+                default:
+                  value:
+                    success: false
+                    error:
+                      code: HOLIDAY_TRIP_NOT_ALLOWED
+                      message: Travel is not allowed on holiday 2026-12-25.
+        '502':
+          description: Required holiday provider unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HolidaysApiUnavailableErrorResponse'
+              examples:
+                default:
+                  value:
+                    success: false
+                    error:
+                      code: HOLIDAYS_API_UNAVAILABLE
+                      message: Required holiday validation is currently unavailable.
+        '500':
+          description: Unexpected internal failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerErrorResponse'
+              examples:
+                default:
+                  value:
+                    success: false
+                    error:
+                      code: INTERNAL_SERVER_ERROR
+                      message: An unexpected internal error occurred.
+    get:
+      summary: List trip requests
+      operationId: listTripRequests
+      responses:
+        '500':
+          description: Unexpected internal failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerErrorResponse'
+              examples:
+                default:
+                  value:
+                    success: false
+                    error:
+                      code: INTERNAL_SERVER_ERROR
+                      message: An unexpected internal error occurred.
+  /trip-requests/{id}:
+    get:
+      summary: Get trip request by id
+      operationId: getTripRequestById
+      responses:
+        '400':
+          description: Validation failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorResponse'
+              examples:
+                default:
+                  value:
+                    success: false
+                    error:
+                      code: VALIDATION_ERROR
+                      message: id must be a positive integer.
+        '404':
+          description: Trip request not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TripRequestNotFoundErrorResponse'
+              examples:
+                default:
+                  value:
+                    success: false
+                    error:
+                      code: TRIP_REQUEST_NOT_FOUND
+                      message: Travel request not found.
+        '500':
+          description: Unexpected internal failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerErrorResponse'
+              examples:
+                default:
+                  value:
+                    success: false
+                    error:
+                      code: INTERNAL_SERVER_ERROR
+                      message: An unexpected internal error occurred.
+  /trip-requests/{id}/cancel:
+    patch:
+      summary: Cancel a trip request
+      operationId: cancelTripRequest
+      responses:
+        '400':
+          description: Validation failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorResponse'
+              examples:
+                default:
+                  value:
+                    success: false
+                    error:
+                      code: VALIDATION_ERROR
+                      message: id must be a positive integer.
+        '404':
+          description: Trip request not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TripRequestNotFoundErrorResponse'
+              examples:
+                default:
+                  value:
+                    success: false
+                    error:
+                      code: TRIP_REQUEST_NOT_FOUND
+                      message: Travel request not found.
+        '409':
+          description: Trip request already canceled
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TripRequestAlreadyCanceledErrorResponse'
+              examples:
+                default:
+                  value:
+                    success: false
+                    error:
+                      code: TRIP_REQUEST_ALREADY_CANCELED
+                      message: Travel request is already canceled.
+        '500':
+          description: Unexpected internal failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerErrorResponse'
+              examples:
+                default:
+                  value:
+                    success: false
+                    error:
+                      code: INTERNAL_SERVER_ERROR
+                      message: An unexpected internal error occurred.
+  /holidays/{year}:
+    get:
+      summary: Query national holidays for a year
+      operationId: listNationalHolidaysByYear
+      responses:
+        '400':
+          description: Validation failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorResponse'
+              examples:
+                default:
+                  value:
+                    success: false
+                    error:
+                      code: VALIDATION_ERROR
+                      message: year must be a positive integer.
+        '502':
+          description: Required holiday provider unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HolidaysApiUnavailableErrorResponse'
+              examples:
+                default:
+                  value:
+                    success: false
+                    error:
+                      code: HOLIDAYS_API_UNAVAILABLE
+                      message: Required holiday validation is currently unavailable.
+        '500':
+          description: Unexpected internal failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerErrorResponse'
+              examples:
+                default:
+                  value:
+                    success: false
+                    error:
+                      code: INTERNAL_SERVER_ERROR
+                      message: An unexpected internal error occurred.
+components:
+  schemas:
+    ErrorDetail:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+          pattern: '^[A-Z][A-Z0-9_]*$'
+        message:
+          type: string
+          minLength: 1
+    ErrorResponse:
+      type: object
+      required:
+        - success
+        - error
+      properties:
+        success:
+          type: boolean
+          const: false
+        error:
+          $ref: '#/components/schemas/ErrorDetail'
+    ValidationErrorResponse:
+      allOf:
+        - $ref: '#/components/schemas/ErrorResponse'
+        - type: object
+          properties:
+            error:
+              allOf:
+                - $ref: '#/components/schemas/ErrorDetail'
+                - type: object
+                  properties:
+                    code:
+                      const: VALIDATION_ERROR
+    TripRequestNotFoundErrorResponse:
+      allOf:
+        - $ref: '#/components/schemas/ErrorResponse'
+        - type: object
+          properties:
+            error:
+              allOf:
+                - $ref: '#/components/schemas/ErrorDetail'
+                - type: object
+                  properties:
+                    code:
+                      const: TRIP_REQUEST_NOT_FOUND
+    TripRequestAlreadyCanceledErrorResponse:
+      allOf:
+        - $ref: '#/components/schemas/ErrorResponse'
+        - type: object
+          properties:
+            error:
+              allOf:
+                - $ref: '#/components/schemas/ErrorDetail'
+                - type: object
+                  properties:
+                    code:
+                      const: TRIP_REQUEST_ALREADY_CANCELED
+    HolidayTripNotAllowedErrorResponse:
+      allOf:
+        - $ref: '#/components/schemas/ErrorResponse'
+        - type: object
+          properties:
+            error:
+              allOf:
+                - $ref: '#/components/schemas/ErrorDetail'
+                - type: object
+                  properties:
+                    code:
+                      const: HOLIDAY_TRIP_NOT_ALLOWED
+    HolidaysApiUnavailableErrorResponse:
+      allOf:
+        - $ref: '#/components/schemas/ErrorResponse'
+        - type: object
+          properties:
+            error:
+              allOf:
+                - $ref: '#/components/schemas/ErrorDetail'
+                - type: object
+                  properties:
+                    code:
+                      const: HOLIDAYS_API_UNAVAILABLE
+    InternalServerErrorResponse:
+      allOf:
+        - $ref: '#/components/schemas/ErrorResponse'
+        - type: object
+          properties:
+            error:
+              allOf:
+                - $ref: '#/components/schemas/ErrorDetail'
+                - type: object
+                  properties:
+                    code:
+                      const: INTERNAL_SERVER_ERROR

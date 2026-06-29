@@ -40,6 +40,18 @@ export const getJson = async (baseUrl: string, path: string): Promise<Response> 
 export const getHolidaysByYear = async (baseUrl: string, year: number | string): Promise<Response> =>
   getJson(baseUrl, `/holidays/${String(year)}`)
 
+export const expectErrorResponse = async (
+  response: Response,
+  status: number,
+  error: { code: string; message: string },
+): Promise<void> => {
+  expect(response.status).toBe(status)
+  await expect(response.json()).resolves.toStrictEqual({
+    success: false,
+    error,
+  })
+}
+
 export const patchJson = async (baseUrl: string, path: string): Promise<Response> =>
   fetch(`${baseUrl}${path}`, {
     method: 'PATCH',

@@ -6,6 +6,11 @@ export type ApplicationErrorCode =
   | 'HOLIDAYS_API_UNAVAILABLE'
   | 'INTERNAL_SERVER_ERROR'
 
+export interface ApplicationErrorDetail<Code extends string = ApplicationErrorCode> {
+  code: Code
+  message: string
+}
+
 export class ApplicationError extends Error {
   public readonly code: ApplicationErrorCode
   public readonly statusCode: number
@@ -41,3 +46,11 @@ export const internalServerError = (): ApplicationError =>
   new ApplicationError('INTERNAL_SERVER_ERROR', 'An unexpected internal error occurred.', 500)
 
 export const isApplicationError = (error: unknown): error is ApplicationError => error instanceof ApplicationError
+
+export const toApplicationErrorDetail = ({
+  code,
+  message,
+}: Pick<ApplicationError, 'code' | 'message'>): ApplicationErrorDetail => ({
+  code,
+  message,
+})
