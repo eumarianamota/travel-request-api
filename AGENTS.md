@@ -162,5 +162,5 @@ If it affects observable behavior, external contracts, authorization, workflow s
 <!-- SPECKIT START -->
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan:
-`specs/005-query-national-holidays/plan.md`
+`specs/006-standardize-success-responses/plan.md`
 <!-- SPECKIT END -->

@@ -1,5 +1,6 @@
 import type { NextFunction, Request, Response } from 'express'
 
+import { toSuccessResponseBody } from '#src/shared/infra/http/success-response'
 import type { AppDependencies } from '#src/shared/infra/http/types'
 import { createListTripRequestsUseCase } from '#src/trip-requests/application/list-trip-requests'
 
@@ -17,10 +18,7 @@ export const listTripRequestsController =
         count: tripRequests.length,
       })
 
-      response.status(200).json({
-        success: true,
-        data: tripRequests,
-      })
+      response.status(200).json(toSuccessResponseBody(tripRequests))
     } catch (error) {
       next(error)
     }

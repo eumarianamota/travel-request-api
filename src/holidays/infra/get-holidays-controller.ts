@@ -1,6 +1,7 @@
 import type { NextFunction, Request, Response } from 'express'
 
 import { createGetHolidaysByYearUseCase } from '#src/holidays/application/get-holidays-by-year'
+import { toSuccessResponseBody } from '#src/shared/infra/http/success-response'
 import type { AppDependencies } from '#src/shared/infra/http/types'
 
 export const getHolidaysController =
@@ -29,10 +30,7 @@ export const getHolidaysController =
         year: requestedYear,
       })
 
-      response.status(200).json({
-        success: true,
-        data: holidays,
-      })
+      response.status(200).json(toSuccessResponseBody(holidays))
     } catch (error) {
       next(error)
     }

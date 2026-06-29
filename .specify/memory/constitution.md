@@ -37,7 +37,7 @@ technical design for this API.
 Observable API behavior MUST remain explicit, consistent, and contract-driven.
 Success responses MUST use the `success` and `data` envelope, errors MUST be
 standardized, and observable trip request statuses MUST remain limited to
-`requested` and `canceled` unless the specification is amended. Input dates
+`pending` and `canceled` unless the specification is amended. Input dates
 accepted in valid ISO 8601 formats MUST be normalized before persistence and
 returned in UTC with the `YYYY-MM-DDTHH:mm:ss.sssZ` format. Rationale: the
 product depends on predictable client contracts and unambiguous date handling.

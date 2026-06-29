@@ -1,5 +1,6 @@
 import type { NextFunction, Request, Response } from 'express'
 
+import { toSuccessResponseBody } from '#src/shared/infra/http/success-response'
 import type { AppDependencies } from '#src/shared/infra/http/types'
 import { createCancelTripRequestUseCase } from '#src/trip-requests/application/cancel-trip-request'
 
@@ -16,10 +17,7 @@ export const cancelTripRequestController =
 
       dependencies.logger.info('Trip request canceled successfully', { tripRequestId: tripRequest.id })
 
-      response.status(200).json({
-        success: true,
-        data: tripRequest,
-      })
+      response.status(200).json(toSuccessResponseBody(tripRequest))
     } catch (error) {
       next(error)
     }

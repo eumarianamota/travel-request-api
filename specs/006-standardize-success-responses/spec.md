@@ -129,7 +129,8 @@ and place the full resulting trip request in `data`.
 - **FR-016**: The system MUST preserve normalized UTC timestamp strings for
   trip-request date fields in successful responses.
 - **FR-017**: The system MUST define observable success-response contracts for
-  all currently exposed API operations in scope.
+  the five currently exposed HTTP operations in scope: create, list, get by
+  id, cancel, and query holidays by year.
 - **FR-018**: The system MUST preserve consistent success-envelope behavior
   across object-returning and list-returning operations.
 
@@ -164,8 +165,8 @@ and place the full resulting trip request in `data`.
 - The primary users are internal institutional staff members who already have
   access to the API and consume it directly.
 - The feature scope is limited to successful responses for the currently
-  exposed API operations: create, list, get by id, cancel, and query holidays
-  by year.
+  exposed five HTTP operations: create, list, get by id, cancel, and query
+  holidays by year.
 - Error-response standardization is governed separately and is not changed by
   this feature.
 - The existing observable business payloads for trip requests and holidays

@@ -1,5 +1,6 @@
 import type { NextFunction, Request, Response } from 'express'
 
+import { toSuccessResponseBody } from '#src/shared/infra/http/success-response'
 import type { AppDependencies } from '#src/shared/infra/http/types'
 import { createCreateTripRequestUseCase } from '#src/trip-requests/application/create-trip-request'
 import type { CreateTripRequestInput } from '#src/trip-requests/domain/trip-request'
@@ -17,10 +18,7 @@ export const createTripRequestController =
 
       dependencies.logger.info('Trip request created successfully', { tripRequestId: tripRequest.id })
 
-      response.status(201).json({
-        success: true,
-        data: tripRequest,
-      })
+      response.status(201).json(toSuccessResponseBody(tripRequest))
     } catch (error) {
       next(error)
     }

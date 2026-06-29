@@ -1,0 +1,213 @@
+openapi: 3.1.0
+info:
+  title: Travel Request API - Success Response Standardization
+  version: 1.0.0
+  description: Success response envelope contract for currently exposed API operations.
+servers:
+  - url: http://localhost:3030
+paths:
+  /trip-requests:
+    post:
+      summary: Create a trip request
+      responses:
+        '201':
+          description: Trip request created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TripRequestObjectSuccessResponse'
+              examples:
+                default:
+                  value:
+                    success: true
+                    data:
+                      id: 1
+                      requesterName: Maria Silva
+                      origin: Parnaiba
+                      destination: Teresina
+                      departureAt: '2026-06-24T10:00:00.000Z'
+                      returnAt: '2026-06-24T18:00:00.000Z'
+                      purpose: Participation in an institutional meeting
+                      passengerCount: 3
+                      status: pending
+                      createdAt: '2026-06-20T14:30:00.000Z'
+    get:
+      summary: List trip requests
+      responses:
+        '200':
+          description: Trip requests returned successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TripRequestListSuccessResponse'
+              examples:
+                default:
+                  value:
+                    success: true
+                    data: []
+  /trip-requests/{id}:
+    get:
+      summary: Get trip request by id
+      responses:
+        '200':
+          description: Trip request returned successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TripRequestObjectSuccessResponse'
+              examples:
+                default:
+                  value:
+                    success: true
+                    data:
+                      id: 1
+                      requesterName: Maria Silva
+                      origin: Parnaiba
+                      destination: Teresina
+                      departureAt: '2026-06-24T10:00:00.000Z'
+                      returnAt: '2026-06-24T18:00:00.000Z'
+                      purpose: Participation in an institutional meeting
+                      passengerCount: 3
+                      status: pending
+                      createdAt: '2026-06-20T14:30:00.000Z'
+  /trip-requests/{id}/cancel:
+    patch:
+      summary: Cancel a trip request
+      responses:
+        '200':
+          description: Trip request canceled successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TripRequestObjectSuccessResponse'
+              examples:
+                default:
+                  value:
+                    success: true
+                    data:
+                      id: 1
+                      requesterName: Maria Silva
+                      origin: Parnaiba
+                      destination: Teresina
+                      departureAt: '2026-06-24T10:00:00.000Z'
+                      returnAt: '2026-06-24T18:00:00.000Z'
+                      purpose: Participation in an institutional meeting
+                      passengerCount: 3
+                      status: canceled
+                      createdAt: '2026-06-20T14:30:00.000Z'
+  /holidays/{year}:
+    get:
+      summary: Query national holidays for a year
+      responses:
+        '200':
+          description: Holiday list returned successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HolidayListSuccessResponse'
+              examples:
+                default:
+                  value:
+                    success: true
+                    data:
+                      - date: 2026-01-01
+                        name: Confraternizacao Universal
+                        type: national
+                        year: 2026
+components:
+  schemas:
+    TripRequest:
+      type: object
+      required:
+        - id
+        - requesterName
+        - origin
+        - destination
+        - departureAt
+        - returnAt
+        - purpose
+        - passengerCount
+        - status
+        - createdAt
+      properties:
+        id:
+          type: integer
+          minimum: 1
+        requesterName:
+          type: string
+        origin:
+          type: string
+        destination:
+          type: string
+        departureAt:
+          type: string
+          format: date-time
+        returnAt:
+          type: string
+          format: date-time
+        purpose:
+          type: string
+        passengerCount:
+          type: integer
+          minimum: 1
+        status:
+          type: string
+          enum: [pending, canceled]
+        createdAt:
+          type: string
+          format: date-time
+    NationalHoliday:
+      type: object
+      required:
+        - date
+        - name
+        - type
+        - year
+      properties:
+        date:
+          type: string
+          pattern: '^\d{4}-\d{2}-\d{2}$'
+        name:
+          type: string
+        type:
+          type: string
+        year:
+          type: integer
+          minimum: 1
+    TripRequestObjectSuccessResponse:
+      type: object
+      required:
+        - success
+        - data
+      properties:
+        success:
+          type: boolean
+          const: true
+        data:
+          $ref: '#/components/schemas/TripRequest'
+    TripRequestListSuccessResponse:
+      type: object
+      required:
+        - success
+        - data
+      properties:
+        success:
+          type: boolean
+          const: true
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/TripRequest'
+    HolidayListSuccessResponse:
+      type: object
+      required:
+        - success
+        - data
+      properties:
+        success:
+          type: boolean
+          const: true
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/NationalHoliday'
