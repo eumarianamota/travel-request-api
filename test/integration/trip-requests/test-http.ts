@@ -37,6 +37,9 @@ export const withTestServer = async <T>(
 
 export const getJson = async (baseUrl: string, path: string): Promise<Response> => fetch(`${baseUrl}${path}`)
 
+export const getHolidaysByYear = async (baseUrl: string, year: number | string): Promise<Response> =>
+  getJson(baseUrl, `/holidays/${String(year)}`)
+
 export const patchJson = async (baseUrl: string, path: string): Promise<Response> =>
   fetch(`${baseUrl}${path}`, {
     method: 'PATCH',

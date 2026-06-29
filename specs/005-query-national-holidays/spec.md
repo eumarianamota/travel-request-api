@@ -66,23 +66,23 @@ from external unavailability.
 is not already available locally, so failures must remain explicit and
 standardized.
 
-**Independent Test**: Query holidays using an invalid year and query a valid
-year whose data requires an unavailable external source, then verify that each
-case returns the standardized error contract for that failure.
+**Independent Test**: Query holidays using an invalid provided year and query a
+valid year whose data requires an unavailable external source, then verify
+that each case returns the standardized error contract for that failure.
 
 **Acceptance Scenarios**:
 
 1. **Given** the requested year is invalid, **When** the user queries holidays
    for that year, **Then** the system rejects the request with a standardized
    validation error.
-2. **Given** the requested year is valid but not currently available locally,
-   **When** the system cannot obtain the required holiday data from the
-   external source, **Then** the system returns a standardized provider
+2. **Given** the requested year is valid and is not currently available
+   locally, **When** the system cannot obtain the required holiday data from
+   the external source, **Then** the system returns a standardized provider
    unavailability error.
 
 ### Edge Cases
 
-- The year input is missing, non-numeric, or not a valid positive year.
+- The provided year input is non-numeric or not a valid positive year.
 - The queried year is valid but has no locally available records yet.
 - The external holiday provider is required for the year and is unavailable or
   returns an error.
@@ -112,8 +112,7 @@ case returns the standardized error contract for that failure.
 - **FR-008**: The system MUST prioritize already available holiday data for the
   requested year when it exists.
 - **FR-009**: The system MUST obtain holiday data from the external holiday
-  source only when the requested year is not already available locally or must
-  be refreshed according to the active product rules.
+  source only when the requested year is not already available locally.
 - **FR-010**: When the system obtains holiday data externally for a requested
   year, it MUST make that year available for subsequent queries.
 - **FR-011**: The system MUST return only holiday records whose `year` matches
@@ -162,8 +161,11 @@ case returns the standardized error contract for that failure.
   request.
 - The active product rules for holiday data reuse remain local-first, with the
   external source consulted only when the requested year is not already
-  available locally or requires refresh according to the active specification.
+  available locally.
 - The external holiday source remains the authoritative source when local data
   is unavailable for the requested year.
+- Requests to `/holidays` without a year path segment are outside the scope of
+  this feature and follow normal routing behavior instead of feature-level
+  validation.
 - The holiday query feature does not introduce new authentication or
   authorization behavior beyond the current API access model.

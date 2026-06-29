@@ -33,6 +33,10 @@ export const buildBootstrapContext = (): BootstrapContext => {
     logger,
     tripRequestRepository,
     holidayValidationService,
+    holidayQuery: {
+      holidayRepository,
+      holidaysGateway,
+    },
   })
 
   return {

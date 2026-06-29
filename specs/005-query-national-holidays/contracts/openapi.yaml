@@ -1,0 +1,171 @@
+openapi: 3.1.0
+info:
+  title: Travel Request API - Holidays Query
+  version: 1.0.0
+  description: Contract for querying national holidays by year.
+servers:
+  - url: http://localhost:3030
+paths:
+  /holidays/{year}:
+    get:
+      summary: List national holidays for a year
+      operationId: listNationalHolidaysByYear
+      tags:
+        - Holidays
+      parameters:
+        - name: year
+          in: path
+          required: true
+          description: Positive integer year to query.
+          schema:
+            type: string
+            pattern: '^[0-9]+$'
+      responses:
+        '200':
+          description: Holidays returned successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HolidaysSuccessResponse'
+              examples:
+                default:
+                  value:
+                    success: true
+                    data:
+                      - date: 2026-01-01
+                        name: Confraternizacao Universal
+                        type: national
+                        year: 2026
+                      - date: 2026-04-21
+                        name: Tiradentes
+                        type: national
+                        year: 2026
+        '400':
+          description: Invalid year input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorResponse'
+              examples:
+                invalid-year:
+                  value:
+                    success: false
+                    error:
+                      code: VALIDATION_ERROR
+                      message: year must be a positive integer.
+        '502':
+          description: Required holiday provider unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HolidaysApiUnavailableErrorResponse'
+              examples:
+                provider-unavailable:
+                  value:
+                    success: false
+                    error:
+                      code: HOLIDAYS_API_UNAVAILABLE
+                      message: Required holiday validation is currently unavailable.
+        '500':
+          description: Unexpected internal failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerErrorResponse'
+              examples:
+                unexpected:
+                  value:
+                    success: false
+                    error:
+                      code: INTERNAL_SERVER_ERROR
+                      message: An unexpected internal error occurred.
+components:
+  schemas:
+    NationalHoliday:
+      type: object
+      required:
+        - date
+        - name
+        - type
+        - year
+      properties:
+        date:
+          type: string
+          pattern: '^\d{4}-\d{2}-\d{2}$'
+        name:
+          type: string
+        type:
+          type: string
+        year:
+          type: integer
+          minimum: 1
+    HolidaysSuccessResponse:
+      type: object
+      required:
+        - success
+        - data
+      properties:
+        success:
+          type: boolean
+          const: true
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/NationalHoliday'
+    ErrorDetail:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+    ErrorResponse:
+      type: object
+      required:
+        - success
+        - error
+      properties:
+        success:
+          type: boolean
+          const: false
+        error:
+          $ref: '#/components/schemas/ErrorDetail'
+    ValidationErrorResponse:
+      allOf:
+        - $ref: '#/components/schemas/ErrorResponse'
+        - type: object
+          properties:
+            error:
+              allOf:
+                - $ref: '#/components/schemas/ErrorDetail'
+                - type: object
+                  properties:
+                    code:
+                      const: VALIDATION_ERROR
+    HolidaysApiUnavailableErrorResponse:
+      allOf:
+        - $ref: '#/components/schemas/ErrorResponse'
+        - type: object
+          properties:
+            error:
+              allOf:
+                - $ref: '#/components/schemas/ErrorDetail'
+                - type: object
+                  properties:
+                    code:
+                      const: HOLIDAYS_API_UNAVAILABLE
+    InternalServerErrorResponse:
+      allOf:
+        - $ref: '#/components/schemas/ErrorResponse'
+        - type: object
+          properties:
+            error:
+              allOf:
+                - $ref: '#/components/schemas/ErrorDetail'
+                - type: object
+                  properties:
+                    code:
+                      const: INTERNAL_SERVER_ERROR
