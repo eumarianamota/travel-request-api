@@ -1,65 +1,12 @@
-# TypeScript Setup
-
-Template profissional para projetos **Node.js + TypeScript** com foco em:
-
-- TypeScript estrito
-- Node.js moderno com suporte nativo a TypeScript apagável
-- ESM com `NodeNext`
-- alias interno oficial via `package.json#imports`
-- ESLint Flat Config
-- Prettier
-- Vitest
-- Husky
-- lint-staged
-- validação de commit message
-- integração com VS Code
-- build para produção
-- GitHub Actions
-- suporte a Codex com `AGENTS.md`
-
-## Objetivo
-
-Este repositório fornece uma base reutilizável para projetos TypeScript com Node.js, organizada para oferecer:
-
-- padronização de código
-- validação automática de qualidade
-- experiência consistente no VS Code
-- pipeline simples para desenvolvimento, testes e build
-- baixo acoplamento a ferramentas externas desnecessárias
-
-## Requisitos
-
-- Node.js **24.15+**
-- Corepack habilitado
-- Yarn **4+**
-
-## Instalação
-
-```bash
-git clone git@github.com:uespi-setups/typescript.git
-cd typescript
-corepack enable
-yarn install
-```
-
-## Feature ativa
-
-O repositório agora inclui a primeira vertical slice da API de viagens:
-
-- `POST /trip-requests`
-- `GET /trip-requests`
-- persistência em PostgreSQL com SQL direto
-- validação local-first de feriados via BrasilAPI
-
-Fluxo de preparação:
-
-```bash
-yarn db:schema
-yarn dev
-```
-
-Detalhes operacionais em [docs/create-trip-request.md](/home/mariana/Documentos/CSTSC/20261/PBK/travel-request-api/docs/create-trip-request.md).
 # Travel Request API
+
+## Equipe
+
+| Integrante | Nome completo |
+| --- | --- |
+| 1 | Mariana da Mota Pinho |
+| 2 | Willamy Josué Santos Serejo |
+
 
 ## Sobre o Projeto
 
@@ -71,34 +18,42 @@ O sistema permite que colaboradores de uma instituição pública registrem suas
 *   Cancelamento: Alteração de status da solicitação para `canceled`.
 *   Consulta de Feriados: Integração direta com a BrasilAPI para listagem e validação de feriados.
 
-## Tecnologias uilizadas
+
+## Tecnologias utilizadas
 
 - Node.js
 - TypeScript
 - Express
-- PostgreSQL
 - Vitest
 - ESLint
 - Prettier
 - Yarn 4
+- PostgreSQL
+
+## SGBD escolhido
+
+PostgreSQL.
+
+## Gerenciador de pacotes
+
+Yarn 4.
 
 ## Requisitos
 
-- Node.js **24.15+**
+- Node.js 24.15 ou superior
 - Corepack habilitado
-- Yarn **4+**
-- PostgreSQL acessível em `localhost:5432`
+- PostgreSQL disponível localmente ou via Docker Compose
 
-## Instalação
+## Instalação das dependências
 
 ```bash
 corepack enable
 yarn install
 ```
 
-## Configuração
+## Configuração do ambiente
 
-Crie um arquivo `.env` na raiz do projeto com:
+Crie um arquivo `.env` na raiz do projeto com as variáveis abaixo:
 
 ```bash
 NODE_ENV=development
@@ -108,13 +63,44 @@ DATABASE_URL=postgresql://postgres:postgres@localhost:5432/travel_request_api
 HOLIDAYS_API_BASE_URL=https://brasilapi.com.br
 ```
 
-## Banco de dados
+## Subir o SGBD com Docker Compose
 
-Crie o banco `travel_request_api` no PostgreSQL e aplique o schema:
+Crie um arquivo `docker-compose.yml` na raiz do projeto com este conteúdo:
+
+```yaml
+services:
+	postgres:
+		image: postgres:16
+		container_name: travel-request-postgres
+		restart: unless-stopped
+		environment:
+			POSTGRES_USER: postgres
+			POSTGRES_PASSWORD: postgres
+			POSTGRES_DB: travel_request_api
+		ports:
+			- "5432:5432"
+		volumes:
+			- postgres_data:/var/lib/postgresql/data
+
+volumes:
+	postgres_data:
+```
+
+Depois, inicie o banco com:
+
+```bash
+docker compose up -d
+```
+
+## Inicialização e população do banco de dados
+
+Com o PostgreSQL ativo, aplique o schema do projeto:
 
 ```bash
 yarn db:schema
 ```
+
+Esse comando cria as tabelas e índices usados pela aplicação. O repositório não possui um seed de dados de exemplo.
 
 ## Executar a aplicação
 
@@ -123,6 +109,19 @@ yarn dev
 ```
 
 A API sobe, por padrão, em `http://localhost:3030`.
+
+## Executar os testes
+
+```bash
+yarn test
+```
+
+Para uma validação mais ampla, também é possível executar:
+
+```bash
+yarn type:check
+yarn lint
+```
 
 ## Scripts disponíveis
 
@@ -135,58 +134,57 @@ A API sobe, por padrão, em `http://localhost:3030`.
 - `yarn test` - executa os testes
 - `yarn check` - executa formatação, lint, typecheck e testes
 
-## Rotas
+## Endpoints disponíveis
 
-### Trip requests
+### POST /trip-requests
 
-- `POST /trip-requests`
-- `GET /trip-requests`
-- `GET /trip-requests/:id`
-- `PATCH /trip-requests/:id/cancel`
+Cria uma nova solicitação de viagem.
 
-### Feriados
+Corpo da requisição:
 
-- `GET /holidays/:year`
-
-## Exemplo de uso
-
-Criar uma solicitação:
-
-```bash
-curl -i \
-	-X POST http://localhost:3030/trip-requests \
-	-H "content-type: application/json" \
-	-d '{
-		"requesterName": "Maria Silva",
-		"origin": "Parnaiba",
-		"destination": "Teresina",
-		"departureAt": "2026-06-24T10:00:00-03:00",
-		"returnAt": "2026-06-24T18:00:00-03:00",
-		"purpose": "Participation in an institutional meeting",
-		"passengerCount": 3
-	}'
+```json
+{
+  "requesterName": "Maria Silva",
+  "origin": "Parnaiba",
+  "destination": "Teresina",
+  "departureAt": "2026-06-24T10:00:00-03:00",
+  "returnAt": "2026-06-24T18:00:00-03:00",
+  "purpose": "Participation in an institutional meeting",
+  "passengerCount": 3
+}
 ```
 
-Listar solicitações:
+### GET /trip-requests
+
+Lista todas as solicitações de viagem cadastradas.
+
+### GET /trip-requests/:id
+
+Consulta uma solicitação específica pelo identificador.
+
+### PATCH /trip-requests/:id/cancel
+
+Cancela uma solicitação específica.
+
+### GET /holidays/:year
+
+Lista os feriados nacionais do ano informado.
+
+Exemplo:
 
 ```bash
-curl -i http://localhost:3030/trip-requests
+GET /holidays/2026
 ```
 
-Consultar feriados de um ano:
+## Observações sobre as respostas
 
-```bash
-curl -i http://localhost:3030/holidays/2026
-```
+As rotas retornam respostas no formato:
 
-## Desenvolvimento
-
-Os testes cobrem a configuração de ambiente, o bootstrap da aplicação e os fluxos principais da API. Se você quiser validar o projeto localmente, a ordem mais útil é:
-
-```bash
-yarn type:check
-yarn test
-yarn lint
+```json
+{
+  "success": true,
+  "data": {}
+}
 ```
 
 ## Documentação adicional
