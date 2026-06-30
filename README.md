@@ -186,8 +186,3 @@ As rotas retornam respostas no formato:
   "data": {}
 }
 ```
-
-## Documentação adicional
-
-- [Guia de criação de solicitação de viagem](docs/create-trip-request.md)
-- [Tutorial de uso local](docs/tutorial.md)
